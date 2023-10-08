@@ -11,10 +11,16 @@ C !DESCRIPTION:
 C  calls routines which read in fields needed for any tracer experiment
 C !USES: ===============================================================
       IMPLICIT NONE
+#include "SIZE.h"
+#include "GRID.h"
+#include "DYNVARS.h"
 #include "EEPARAMS.h"
+#include "PARAMS.h"
+#include "PTRACERS_SIZE.h"
+#include "PTRACERS_PARAMS.h"
+#include "PTRACERS_FIELDS.h"
 #include "GCHEM.h"
 #include "GCHEM_FIELDS.h"
-#include "SIZE.h"
 
 C !INPUT PARAMETERS: ===================================================
 C  myTime               :: current time
