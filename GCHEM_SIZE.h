@@ -15,7 +15,7 @@ C  Note: 1) tracers that use GCHEM_SEPARATE_FORCING are not counted here
 C           since they do not use gchemTendency array.
 C        2) if several tendency-tracer pkgs are compiled with no intention to
 C           be used all together, a smaller number could be specified like here:
-c     PARAMETER( GCHEM_tendTr_num = 3 )
+C     PARAMETER( GCHEM_tendTr_num = 3 )
 #ifdef ALLOW_CFC
 # include "CFC_SIZE.h"	
 #else /* ALLOW_CFC */
@@ -28,7 +28,11 @@ c     PARAMETER( GCHEM_tendTr_num = 3 )
       INTEGER SPOIL_Tr_num
       PARAMETER( SPOIL_Tr_num = 0 )
 #endif /* ALLOW_SPOIL */
-      PARAMETER( GCHEM_tendTr_num = CFC_Tr_num + SPOIL_Tr_num )
+C Here is a modifiction by Alan
+C commented out by Alan since it generated multiple declaration error
+C and I will set GCHEM_tenddTr_num = 3
+C      PARAMETER( GCHEM_tendTr_num = CFC_Tr_num + SPOIL_Tr_num )
+      PARAMETER( GCHEM_tendTr_num = 3 )
 CEOP
 #endif /* ALLOW_GCHEM */
 

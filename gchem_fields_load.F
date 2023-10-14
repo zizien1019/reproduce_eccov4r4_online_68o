@@ -20,6 +20,7 @@ C !USES: ===============================================================
 #include "PTRACERS_PARAMS.h"
 #include "PTRACERS_FIELDS.h"
 #include "GCHEM.h"
+#include "GCHEM_SIZE.h"
 #include "GCHEM_FIELDS.h"
 
 C !INPUT PARAMETERS: ===================================================
@@ -33,6 +34,8 @@ C  myThid               :: thread number
 C !LOCAL VARIABLES: ====================================================
 C =================
 C Here starts the modification by Alan
+C  gchemTendency of all tracers is read from the same file
+C  filename1
 C 9 OCT 2023
 C =================
 C     i,j,k,bi,bj,jTr  :: loop indices
@@ -60,13 +63,26 @@ C     Read the source file into gchemTendency.
 C     But only one filename is used here.
 C     Maybe find some way to loop over more filenames in the future.
       IF (nIter0.EQ.PTRACERS_Iter0) THEN
-       DO jTr = 1, GCHEM_tendTr_num
+C       DO jTr = 1, GCHEM_tendTr_num
+C     read up to three files
+C     last argument of gchemTendency is the tracer number
         tmpSourceFile = Filename1
         IF ( tmpSourceFile .NE. ' ' ) THEN
          CALL READ_FLD_XYZ_RL(tmpSourceFile,' ',
-     &        gchemTendency(1-OLx,1-OLy,1,1,1,jTr),0,myThid)
+     &        gchemTendency(1-OLx,1-OLy,1,1,1,1),0,myThid)
         ENDIF
-       ENDDO
+        tmpSourceFile = Filename2
+        IF ( tmpSourceFile .NE. ' ' ) THEN
+         CALL READ_FLD_XYZ_RL(tmpSourceFile,' ',
+     &        gchemTendency(1-OLx,1-OLy,1,1,1,2),0,myThid)
+        ENDIF
+        tmpSourceFile = Filename3
+        IF ( tmpSourceFile .NE. ' ' ) THEN
+         CALL READ_FLD_XYZ_RL(tmpSourceFile,' ',
+     &        gchemTendency(1-OLx,1-OLy,1,1,1,3),0,myThid)
+        ENDIF
+        
+C       ENDDO
       ENDIF
 
 C     Apply mask
