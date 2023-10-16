@@ -9,9 +9,12 @@ C-          So that the coefficients A, B correspond to the correct physics.
 
 #include "PACKAGES_CONFIG.h"
 #include "CPP_OPTIONS.h"
+#include "PTRACERS_PARAMS.h"
+#include "PTRACERS_SIZE.h"
 #ifdef ALLOW_AUTODIFF
 # include "AUTODIFF_OPTIONS.h"
 #endif
+
 
 CBOP
 C     !ROUTINE: CONVECTIVE_ADJUSTMENT
@@ -31,8 +34,6 @@ C     == Global data ==
 #include "SIZE.h"
 #include "EEPARAMS.h"
 #include "PARAMS.h"
-#include "PTRACERS_PARAMS.h"
-#include "PTRACERS_SIZE.h"
 #include "DYNVARS.h"
 #include "GRID.h"
 #ifdef ALLOW_TIMEAVE
