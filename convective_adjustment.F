@@ -116,19 +116,19 @@ C-          <=> usingZCoords:
 
 C-          Density of k-1 layer (above W(k)) reference to k-1 T-level
             CALL FIND_RHO_2D(
-        &        iMin, iMax, jMin, jMax, k+deltaK,
-        &        theta(1-OLx,1-OLy,k-1,bi,bj),
-        &        salt (1-OLx,1-OLy,k-1,bi,bj),
-        &        rhoKm1,
-        &        k-1, bi, bj, myThid )
+     &         iMin, iMax, jMin, jMax, k+deltaK,
+     &         theta(1-OLx,1-OLy,k-1,bi,bj),
+     &         salt (1-OLx,1-OLy,k-1,bi,bj),
+     &         rhoKm1,
+     &         k-1, bi, bj, myThid )
    
 C-          Density of k layer (below W(k)) reference to k-1 T-level.
             CALL FIND_RHO_2D(
-        &        iMin, iMax, jMin, jMax, k+deltaK,
-        &        theta(1-OLx,1-OLy,k,bi,bj),
-        &        salt (1-OLx,1-OLy,k,bi,bj),
-        &        rhoK,
-        &        k, bi, bj, myThid )
+     &         iMin, iMax, jMin, jMax, k+deltaK,
+     &         theta(1-OLx,1-OLy,k,bi,bj),
+     &         salt (1-OLx,1-OLy,k,bi,bj),
+     &         rhoK,
+     &         k, bi, bj, myThid )
 
 #ifdef ALLOW_AUTODIFF_TAMC
 CADJ STORE rhoKm1 = comlev1_bibj_k, key = kkey, kind = isbyte
