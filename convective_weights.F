@@ -1,3 +1,4 @@
+#include "PACKAGES_CONFIG.h"
 #include "CPP_OPTIONS.h"
 
 CBOP
@@ -25,8 +26,9 @@ C !USES:
 #include "SIZE.h"
 #include "EEPARAMS.h"
 #include "PARAMS.h"
-#include "PTRACERS_PARAMS.h"
 #include "PTRACERS_SIZE.h"
+#include "PTRACERS_PARAMS.h"
+#include "DYNVARS.h"
 #include "GRID.h"
 
 C !INPUT/OUTPUT PARAMETERS:
