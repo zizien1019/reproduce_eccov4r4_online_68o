@@ -16,6 +16,9 @@ C     PTRACERS_taveFreq :: Frequency with which time-averaged PTRACERS
 C                          are written to post-processing files.
 C     PTRACERS_ref      :: vertical profile for passive tracers, in
 C                          analogy to tRef and sRef, hence the name
+C     PTRACERS_wRise    :: tracer rise velocity
+C                          > 0 for positively buoyant tracers
+C                          < 0 for negatively buoyant tracers
 C     PTRACERS_EvPrRn   :: tracer concentration in Rain, Evap & RunOff
 C       notes: a) used if both NonLin_FrSurf & useRealFreshWater are set.
 C              b) use pTracer surface (local) value if = UNSET_RL (default)
