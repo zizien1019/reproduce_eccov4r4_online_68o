@@ -19,8 +19,8 @@ C !USES:
       IMPLICIT NONE
 #include "SIZE.h"
 #include "EEPARAMS.h"
-#include "PTRACERS_PARAMS.h"
 #include "PTRACERS_SIZE.h"
+#include "PTRACERS_PARAMS.h"
 
 C !INPUT/OUTPUT PARAMETERS:
 C     bi,bj,k :: indices
