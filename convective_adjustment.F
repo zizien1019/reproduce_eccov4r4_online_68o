@@ -9,8 +9,6 @@ C-          So that the coefficients A, B correspond to the correct physics.
 
 #include "PACKAGES_CONFIG.h"
 #include "CPP_OPTIONS.h"
-#include "PTRACERS_PARAMS.h"
-#include "PTRACERS_SIZE.h"
 #ifdef ALLOW_AUTODIFF
 # include "AUTODIFF_OPTIONS.h"
 #endif
@@ -19,8 +17,8 @@ C-          So that the coefficients A, B correspond to the correct physics.
 CBOP
 C     !ROUTINE: CONVECTIVE_ADJUSTMENT
 C     !INTERFACE:
-      SUBROUTINE CONVECTIVE_ADJUSTMENT(
-     I                      bi, bj, myTime, myIter, myThid )
+        SUBROUTINE CONVECTIVE_ADJUSTMENT(
+     I        bi, bj, myTime, myIter, myThid )
 C     !DESCRIPTION: \bv
 C     *==========================================================*
 C     | SUBROUTINE CONVECTIVE_ADJUSTMENT
