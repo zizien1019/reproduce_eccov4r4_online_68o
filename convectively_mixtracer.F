@@ -44,7 +44,7 @@ CEOP
 
       DO j=1-OLy,sNy+OLy
        DO i=1-OLx,sNx+OLx
-            IF (PTRACERS_rho .LE. 1025. _d 0) THEN
+            IF (PTRACERS_wRise .GT. 0. _d 0) THEN
         delTrac=Tracer(i,j,k,bi,bj)
         Tracer(i,j,k-1,bi,bj)=Tracer(i,j,k-1,bi,bj)
      &                       +weightA(i,j)*delTrac
