@@ -135,7 +135,7 @@ CADJ STORE rhoKm1 = comlev1_bibj_k, key = kkey, kind = isbyte
 CADJ STORE rhoK   = comlev1_bibj_k, key = kkey, kind = isbyte
 #endif /* ALLOW_AUTODIFF_TAMC */
 
-        IF (PTRACERS_wRise .GT. 0. _d 0)
+        IF (PTRACERS_wRise .GT. 0. _d 0) THEN
 C--       If positively buoyant loop from top to bottom
 C--       Loop over all *interior* layers
                 DO k=kTop,kBottom,kDir
@@ -180,7 +180,7 @@ C-          Convectively mix passive tracers across interface k
 
 C--       End DO k=2,Nr
                 ENDDO
-        ELSE 
+        ELSE
 C--       If negatively buoyany loop from bottom to top
 C--       Loop over all *interior* layers
                 DO k=kBottom,kTop,-kDir
@@ -225,7 +225,7 @@ C-          Convectively mix passive tracers across interface k
 
 C--       End DO k=Nr,2
                 ENDDO
-C--       Endif (PTRACERS_rho .LE. 1025)
+C--       Endif (wRise<=0)
         ENDIF
 
 #ifdef ALLOW_TIMEAVE
