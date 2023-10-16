@@ -71,17 +71,7 @@ C     last argument of gchemTendency is the tracer number
          CALL READ_FLD_XYZ_RL(tmpSourceFile,' ',
      &        gchemTendency(1-OLx,1-OLy,1,1,1,1),0,myThid)
         ENDIF
-        tmpSourceFile = Filename2
-        IF ( tmpSourceFile .NE. ' ' ) THEN
-         CALL READ_FLD_XYZ_RL(tmpSourceFile,' ',
-     &        gchemTendency(1-OLx,1-OLy,1,1,1,2),0,myThid)
-        ENDIF
-        tmpSourceFile = Filename3
-        IF ( tmpSourceFile .NE. ' ' ) THEN
-         CALL READ_FLD_XYZ_RL(tmpSourceFile,' ',
-     &        gchemTendency(1-OLx,1-OLy,1,1,1,3),0,myThid)
-        ENDIF
-        
+
 C       ENDDO
       ENDIF
 

@@ -30,9 +30,9 @@ C     PARAMETER( GCHEM_tendTr_num = 3 )
 #endif /* ALLOW_SPOIL */
 C Here is a modifiction by Alan
 C commented out by Alan since it generated multiple declaration error
-C and I will set GCHEM_tenddTr_num = 3
+C and I will set GCHEM_tenddTr_num = 1
 C      PARAMETER( GCHEM_tendTr_num = CFC_Tr_num + SPOIL_Tr_num )
-      PARAMETER( GCHEM_tendTr_num = 3 )
+      PARAMETER( GCHEM_tendTr_num = 1 )
 CEOP
 #endif /* ALLOW_GCHEM */
 

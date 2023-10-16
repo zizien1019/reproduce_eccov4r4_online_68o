@@ -1,0 +1,4 @@
+{
+    "fortran.fortls.disabled": true,
+    "C_Cpp.dimInactiveRegions": false
+}
