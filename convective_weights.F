@@ -35,7 +35,6 @@ C !INPUT/OUTPUT PARAMETERS:
 C     bi,bj,k :: indices
 C     rhoKm1  :: rho in level k-1
 C     rhoK    :: rho in level  k
-C     w_r     :: rise velocity
 C     weightA :: weight for tracer @ level k-1
 C     weightB :: weight for tracer @ level  k
 C     convectCount :: counter to diagnose where convection occurs
@@ -43,7 +42,6 @@ C     myThid  :: my Thread Id number
       INTEGER bi,bj,k
       _RL rhoKm1 (1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL rhoK   (1-OLx:sNx+OLx,1-OLy:sNy+OLy)
-      _RL w_r
       _RL weightA(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL weightB(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL convectCount(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
@@ -54,8 +52,9 @@ C     myThid  :: my Thread Id number
 C !LOCAL VARIABLES:
 C     i,j      :: Loop counter
 C     dS,d1,d2 :: Layer thicknesses
+C     w_r     :: rise velocity
       INTEGER i,j
-      _RL dS,d1,d2
+      _RL dS,d1,d2,w_r
 CEOP
 
       w_r = PTRACERS_wRise
@@ -67,16 +66,17 @@ C      when positively buoyant,
 C      dS = distance travelled by the upward moving tracer
           d1 = _hFacC(i,j,k-1,bi,bj)*drF(k-1)
           d2 = _hFacC(i,j, k ,bi,bj)*drF( k )
-          dS = MIN(w_r * deltaT, d2)
+          dS = MIN(w_r*deltaT, d2)
           weightA(i,j) = dS / d1
           weightB(i,j) = dS / d2
           convectCount(i,j,k) = 1.
          ELSE
 C      when negatively buoyant,
 C      dS = distance travelled by the downward moving tracer
+          w_r = - w_r
           d1 = _hFacC(i,j,k-1,bi,bj)*drF(k-1)
           d2 = _hFacC(i,j, k ,bi,bj)*drF( k )
-          dS = MIN(-w_r * deltaT, d1)
+          dS = MIN(w_r*deltaT, d1)
           weightA(i,j) = dS / d1
           weightB(i,j) = dS / d2
           convectCount(i,j,k) = 1.
