@@ -73,10 +73,9 @@ C      dS = distance travelled by the upward moving tracer
          ELSE
 C      when negatively buoyant,
 C      dS = distance travelled by the downward moving tracer
-          w_r = - w_r
           d1 = _hFacC(i,j,k-1,bi,bj)*drF(k-1)
           d2 = _hFacC(i,j, k ,bi,bj)*drF( k )
-          dS = MIN(w_r*cAdjFreq, d1)
+          dS = MIN(-w_r*cAdjFreq, d1)
           weightA(i,j) = dS / d1
           weightB(i,j) = dS / d2
           convectCount(i,j,k) = 1.
