@@ -113,13 +113,13 @@ C      when negatively buoyant,
             DO j = 1-OLy, sNy+OLy
                   DO i = 1-OLx, sNx+OLx
                         IF (PTRACERS_wRise .GE. 0. _d 0) THEN
-                              delTrac = Tracer(i,j,k,bi,bj)
+                              delTrac = pTracer(i,j,k,bi,bj,jTr)
                               gchemTendency(i,j,k-1,bi,bj,jTr) = gchemTendency(i,j,k-1,bi,bj,jTr)
                         &                       + weightA(i,j)*delTrac
                               gchemTendency(i,j,k,bi,bj,jTr) = gchemTendency(i,j,k,bi,bj,jTr)
                         &                       - weightB(i,j)*delTrac
                         ELSE
-                              delTrac = Tracer(i,j,k-1,bi,bj)
+                              delTrac = pTracer(i,j,k-1,bi,bj,jTr)
                               gchemTendency(i,j,k-1,bi,bj,jTr) = gchemTendency(i,j,k-1,bi,bj,jTr)
                         &                       - weightA(i,j)*delTrac
                               gchemTendency(i,j,k,bi,bj,jTr) = gchemTendency(i,j,k,bi,bj,jTr)
