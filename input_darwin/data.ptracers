@@ -12,7 +12,7 @@
 # PTRACERS_dumpFreq = 27000.0,
 # Monthly output
 # PTRACERS_dumpFreq = 2592000.0,
- PTRACERS_wRise = -0.000001,
+ PTRACERS_wRise = -1.E-6,
 
 #
 PTRACERS_advScheme(1) = 77,
