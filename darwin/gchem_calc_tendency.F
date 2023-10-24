@@ -27,14 +27,14 @@ C !USES: ===============================================================
 #include "PTRACERS_PARAMS.h"
 #include "PTRACERS_FIELDS.h"
 #include "GCHEM.h"
+#include "GCHEM_SIZE.h"
+#include "GCHEM_FIELDS.h"
 #ifdef ALLOW_CFC
 # include "CFC_SIZE.h"
 #endif
 #ifdef ALLOW_SPOIL
 # include "SPOIL_SIZE.h"
 #endif
-#include "GCHEM_SIZE.h"
-#include "GCHEM_FIELDS.h"
 
 C !INPUT PARAMETERS: ===================================================
 C  myTime               :: current time
@@ -111,22 +111,35 @@ C      when negatively buoyant,
                   ENDDO
             ENDDO
             DO j = 1-OLy, sNy+OLy
-                  DO i = 1-OLx, sNx+OLx
-                        IF (PTRACERS_wRise .GE. 0. _d 0) THEN
-                              delTrac = pTracer(i,j,k,bi,bj,jTr)
-                              gchemTendency(i,j,k-1,bi,bj,jTr) = gchemTendency(i,j,k-1,bi,bj,jTr)
-                        &                       + weightA(i,j)*delTrac
-                              gchemTendency(i,j,k,bi,bj,jTr) = gchemTendency(i,j,k,bi,bj,jTr)
-                        &                       - weightB(i,j)*delTrac
-                        ELSE
-                              delTrac = pTracer(i,j,k-1,bi,bj,jTr)
-                              gchemTendency(i,j,k-1,bi,bj,jTr) = gchemTendency(i,j,k-1,bi,bj,jTr)
-                        &                       - weightA(i,j)*delTrac
-                              gchemTendency(i,j,k,bi,bj,jTr) = gchemTendency(i,j,k,bi,bj,jTr)
-                        &                       + weightB(i,j)*delTrac
-                        ENDIF
+             DO i = 1-OLx, sNx+OLx
+              IF (PTRACERS_wRise .GE. 0. _d 0) THEN
+                  delTrac = pTracer(i,j,k,bi,bj,jTr)
+                  gchemTendency(i,j,k-1,bi,bj,jTr) = 
+     &             gchemTendency(i,j,k-1,bi,bj,jTr)
+     &             + weightA(i,j)*delTrac
+                  gchemTendency(i,j,k,bi,bj,jTr) = 
+     &             gchemTendency(i,j,k,bi,bj,jTr)
+     &             - weightB(i,j)*delTrac
+              ELSE
+                  delTrac = pTracer(i,j,k-1,bi,bj,jTr)
+                  gchemTendency(i,j,k-1,bi,bj,jTr) = 
+     &             gchemTendency(i,j,k-1,bi,bj,jTr)
+     &             - weightA(i,j)*delTrac
+                  gchemTendency(i,j,k,bi,bj,jTr) = 
+     &             gchemTendency(i,j,k,bi,bj,jTr)
+     &             + weightB(i,j)*delTrac
+              ENDIF
           
-                  ENDDO
+             ENDDO
+            ENDDO
+         ENDDO
+         DO k = 1, Nr
+            DO j = 1-OLy, sNy+OLy
+             DO i = 1-OLx, sNx+OLx
+                  gchemTendency(i,j,k,bi,bj,jTr) = 
+     &             gchemTendency(i,j,k,bi,bj,jTr)
+     &             + gchemSource(i,j,k,bi,bj,jTr)
+             ENDDO
             ENDDO
          ENDDO
         ENDDO

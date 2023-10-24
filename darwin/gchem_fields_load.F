@@ -44,7 +44,7 @@ C  tmpSourceFile        :: temporary source file name to read in
       CHARACTER*(MAX_LEN_FNAM) tmpSourceFile
 CEOP
 
-C     gchemSource is initialized here
+C     gchemSource & gchemTendency are initialized here
       DO jTr = 1, GCHEM_tendTr_num
        DO bj=myByLo(myThid),myByHi(myThid)
         DO bi=myBxLo(myThid),myBxHi(myThid)
@@ -52,6 +52,7 @@ C     gchemSource is initialized here
           DO j = 1-OLy, sNy+OLy
            DO i = 1-OLx, sNx+OLx
             gchemSource(i,j,k,bi,bj,jTr) = 0. _d 0
+            gchemTendency(i,j,k,bi,bj,jTr) = 0. _d 0
            ENDDO
           ENDDO
          ENDDO
