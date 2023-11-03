@@ -80,8 +80,8 @@ C     An upwind adjustment with respect to the rising/sinking velocity
 C     ** Not sure if it is OK to put an upwind scheme here **
 
 C     PTRACERS_wRise    :: the rising/sinking velocity
-      w_r = PTRACERS_wRise
-
+C      w_r = PTRACERS_wRise
+C
       DO jTr = 1, GCHEM_tendTr_num
        DO bj=myByLo(myThid),myByHi(myThid)
         DO bi=myBxLo(myThid),myBxHi(myThid)
@@ -93,46 +93,53 @@ C     gchemTendency is re-initialized here
                   ENDDO
             ENDDO
          ENDDO
-         DO k = 2, Nr
+C         DO k = 2, Nr
 C     calculate the tendency corresponding to a rising/sinking velocity
-            DO j = 1-OLy, sNy+OLy
-             DO i = 1-OLx, sNx+OLx
-                  d1 = _hFacC(i,j,k-1,bi,bj) * drF(k-1)
-                  d2 = _hFacC(i,j, k ,bi,bj) * drF( k )
-                  IF ( w_r .GE. 0.) THEN
+C            DO j = 1-OLy, sNy+OLy
+C             DO i = 1-OLx, sNx+OLx
+C              IF (maskC(i,j,k,bi,bj) .NE. zeroRS .AND.
+C     &         maskC(i,j,k-1,bi,bj) .NE. zeroRS) THEN
+C                  d1 = _hFacC(i,j,k-1,bi,bj) * drF(k-1)
+C                  d2 = _hFacC(i,j, k ,bi,bj) * drF( k )
+C                  IF ( w_r .GE. 0.) THEN
 C      when positively buoyant,
-                        weightA(i,j) = w_r / d1
-                        weightB(i,j) = w_r / d2
-                  ELSE
+C                        weightA(i,j) = w_r / d1
+C                        weightB(i,j) = w_r / d2
+C                  ELSE
 C      when negatively buoyant,
-                        weightA(i,j) = - w_r / d1
-                        weightB(i,j) = - w_r / d2
-                  ENDIF
-             ENDDO
-            ENDDO
-            DO j = 1-OLy, sNy+OLy
-             DO i = 1-OLx, sNx+OLx
-              IF (PTRACERS_wRise .GE. 0. _d 0) THEN
-                  delTrac = pTracer(i,j,k,bi,bj,jTr)
-                  gchemTendency(i,j,k-1,bi,bj,jTr) = 
-     &              gchemTendency(i,j,k-1,bi,bj,jTr)
-     &              + weightA(i,j)*delTrac
-                  gchemTendency(i,j,k,bi,bj,jTr) = 
-     &              gchemTendency(i,j,k,bi,bj,jTr)
-     &              - weightB(i,j)*delTrac
-              ELSE
-                  delTrac = pTracer(i,j,k-1,bi,bj,jTr)
-                  gchemTendency(i,j,k-1,bi,bj,jTr) = 
-     &              gchemTendency(i,j,k-1,bi,bj,jTr)
-     &              - weightA(i,j)*delTrac
-                  gchemTendency(i,j,k,bi,bj,jTr) = 
-     &              gchemTendency(i,j,k,bi,bj,jTr)
-     &              + weightB(i,j)*delTrac
-              ENDIF
-          
-             ENDDO
-            ENDDO
-         ENDDO
+C                        weightA(i,j) = - w_r / d1
+C                        weightB(i,j) = - w_r / d2
+C                  ENDIF
+C              ELSE
+C      if protrudes the boundary then do nothing 
+C                  weightA(i,j) = 0.0
+C                  weightB(i,j) = 0.0
+C              ENDIF
+C             ENDDO
+C            ENDDO
+C            DO j = 1-OLy, sNy+OLy
+C             DO i = 1-OLx, sNx+OLx
+C              IF (PTRACERS_wRise .GE. 0. _d 0) THEN
+C                  delTrac = pTracer(i,j,k,bi,bj,jTr)
+C                  gchemTendency(i,j,k-1,bi,bj,jTr) = 
+C     &              gchemTendency(i,j,k-1,bi,bj,jTr)
+C     &              + weightA(i,j)*delTrac
+C                  gchemTendency(i,j,k,bi,bj,jTr) = 
+C     &              gchemTendency(i,j,k,bi,bj,jTr)
+C     &              - weightB(i,j)*delTrac
+C              ELSE
+C                  delTrac = pTracer(i,j,k-1,bi,bj,jTr)
+C                  gchemTendency(i,j,k-1,bi,bj,jTr) = 
+C     &              gchemTendency(i,j,k-1,bi,bj,jTr)
+C     &              - weightA(i,j)*delTrac
+C                  gchemTendency(i,j,k,bi,bj,jTr) = 
+C     &              gchemTendency(i,j,k,bi,bj,jTr)
+C     &              + weightB(i,j)*delTrac
+C              ENDIF
+C          
+C             ENDDO
+C            ENDDO
+C         ENDDO
          DO k = 1, Nr
             DO j = 1-OLy, sNy+OLy
              DO i = 1-OLx, sNx+OLx
