@@ -6,6 +6,14 @@
 CBOP
 C !ROUTINE: PTRACERS_INTEGRATE
 
+C ==================
+C Modification by Alan 05,Nov,2023
+C previously this routine calculates advective flux with ufld,vfld,wfld
+C wPart = wfld + wRise , i put
+C to include wRise in the generic adv-diff scheme
+C and thus can be treated implicitly
+C ==================
+
 C !INTERFACE: ==========================================================
       SUBROUTINE PTRACERS_INTEGRATE(
      I                    bi, bj, recip_hFac,
@@ -24,6 +32,7 @@ C !USES: ===============================================================
 #include "SIZE.h"
 #include "EEPARAMS.h"
 #include "PARAMS.h"
+#include "DYNVARS.h"
 #include "GRID.h"
 #ifdef ALLOW_LONGSTEP
 #include "LONGSTEP_PARAMS.h"
@@ -45,6 +54,10 @@ C  KappaRk          :: vertical diffusion used for one passive tracer
 C  myTime           :: model time
 C  myIter           :: time-step number
 C  myThid           :: thread number
+
+C  wRise            :: rising velocity
+      _RL wRise     (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+
       INTEGER bi, bj
       _RS recip_hFac(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL uFld      (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
@@ -89,6 +102,14 @@ C  gTracer          :: passive tracer tendency
 C  gTrForc          :: passive tracer forcing tendency
 C  gTr_AB           :: Adams-Bashforth tracer tendency increment
 C  gTr_trp          :: passive tracer total transport tendency before gchem
+
+C  rhoK             :: Density at level k
+C  wRise            :: Rising velocity field
+C  wPart            :: = wfld + wRise
+      _RL rhoK  (1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL wRise (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+      _RL wPart (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+
       INTEGER iTracer
       INTEGER iMin,iMax,jMin,jMax
       INTEGER i, j, k
@@ -160,6 +181,51 @@ C-    Initialise tracer tendency to zero
          DO j=1-OLy,sNy+OLy
           DO i=1-OLx,sNx+OLx
            gTracer(i,j,k) = 0. _d 0
+          ENDDO
+         ENDDO
+        ENDDO
+
+C     Take wRiseConst if specified
+        IF (PTRACERS_wRiseConst .NE. zeroRL) THEN
+         DO k=1,Nr
+          DO j=1-OLy,sNy+OLy
+           DO i=1-OLx,sNx+OLx
+            wRise(i,j,k) = PTRACERS_wRiseConst
+           ENDDO
+          ENDDO
+         ENDDO
+C-    Otherwise compute rising velocity with PTRACERS_rho_p
+        ELSE
+         DO k=1,Nr
+C-    Density of k layer (below W(k)) reference to k-1 T-level.
+C-    So need to inlude "DYNVAR.h" to get access to theta & salt
+C           CALL FIND_RHO_2D(
+C      I        iMin, iMax, jMin, jMax, k-1,
+C      I        theta(1-OLx,1-OLy,k,bi,bj),
+C      I        salt (1-OLx,1-OLy,k,bi,bj),
+C      O        rhoK,
+C      I        k, bi, bj, myThid )
+          DO j=1-OLy,sNy+OLy
+           DO i=1-OLx,sNx+OLx
+C-      Now use wRise to store water density
+C            wRise(i,j,k) = rhoK(i,j) + rhoConst
+            wRise(i,j,k) = PTRACERS_wRiseConst
+C-      not finished:
+C-      compute rising velocity with density difference
+           ENDDO
+          ENDDO
+         ENDDO
+C-    endif(PTRACERS_wRiseConst .NE. zeroRL)
+        ENDIF
+
+C     Add wRise on top of wfld
+C     now rising/sinking velocity
+C     will be treated within GAD as well
+C     And can use implicit vertical advection, too. 
+        DO k=1,Nr
+         DO j=1-OLy,sNy+OLy
+          DO i=1-OLx,sNx+OLx
+           wPart(i,j,k) = wfld(i,j,k) + wRise(i,j,k)
           ENDDO
          ENDDO
         ENDDO
@@ -241,7 +307,7 @@ CADJ &      = comlev1_bibj_ptracers, key=ikey, byte=isbyte
      I                        PTRACERS_advScheme(iTracer),
      I                        PTRACERS_advScheme(iTracer),
      I                        GAD_TR,
-     I                        PTRACERS_dTLev, uFld, vFld, wFld,
+     I                        PTRACERS_dTLev, uFld, vFld, wPart,
      I                        pTracer(1-OLx,1-OLy,1,1,1,iTracer),
      U                        _Ptracers_som(:,:,:,:,:,:,iTracer),
      O                        gTracer,
@@ -258,7 +324,7 @@ CADJ &      = comlev1_bibj_ptracers, key=ikey, byte=isbyte
      I                        PTRACERS_advScheme(iTracer),
      I                        PTRACERS_advScheme(iTracer),
      I                        GAD_TR,
-     I                        PTRACERS_dTLev, uFld, vFld, wFld,
+     I                        PTRACERS_dTLev, uFld, vFld, wPart,
      I                        pTracer(1-OLx,1-OLy,1,1,1,iTracer),
      O                        gTracer,
      I                        bi, bj, myTime, myIter, myThid )
@@ -286,7 +352,7 @@ CADJ STORE gpTrNm1(:,:,k,bi,bj,iTracer) = comlev1_bibj_k_ptracers,
 CADJ &     key = kkey, kind = isbyte
 #endif /* ALLOW_AUTODIFF_TAMC */
           CALL CALC_ADV_FLOW(
-     I                uFld, vFld, wFld,
+     I                uFld, vFld, wPart,
      U                rTrans,
      O                uTrans, vTrans, rTransKp,
      O                maskUp, xA, yA,
@@ -315,7 +381,7 @@ C      (advection, [explicit] diffusion, parameterizations,...)
           CALL GAD_CALC_RHS(
      I             bi,bj, iMin,iMax,jMin,jMax, k,kM1, kUp,kDown,
      I             xA, yA, maskUp, uFld(1-OLx,1-OLy,k),
-     I             vFld(1-OLx,1-OLy,k), wFld(1-OLx,1-OLy,k),
+     I             vFld(1-OLx,1-OLy,k), wPart(1-OLx,1-OLy,k),
      I             uTrans, vTrans, rTrans, rTransKp,
      I             PTRACERS_diffKh(iTracer),
      I             PTRACERS_diffK4(iTracer),
@@ -457,7 +523,7 @@ c       IF ( PTRACERS_ImplVertAdv(iTracer) ) THEN
           CALL GAD_IMPLICIT_R(
      I         PTRACERS_ImplVertAdv(iTracer),
      I         PTRACERS_advScheme(iTracer), GAD_TR,
-     I         PTRACERS_dTLev, kappaRk, recip_hFac, wFld,
+     I         PTRACERS_dTLev, kappaRk, recip_hFac, wPart,
      I         pTracer(1-OLx,1-OLy,1,bi,bj,iTracer),
      U         gTracer,
      I         bi, bj, myTime, myIter, myThid )

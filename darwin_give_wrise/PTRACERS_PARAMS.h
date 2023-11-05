@@ -16,9 +16,10 @@ C     PTRACERS_taveFreq :: Frequency with which time-averaged PTRACERS
 C                          are written to post-processing files.
 C     PTRACERS_ref      :: vertical profile for passive tracers, in
 C                          analogy to tRef and sRef, hence the name
-C     PTRACERS_wRise    :: tracer rise velocity
-C                          > 0 for positively buoyant tracers
-C                          < 0 for negatively buoyant tracers
+C     PTRACERS_rho_p    :: tracer density
+C     PTRACERS_wRiseConst :: constant rising velocity
+C     *** when specified, wRiseConst is prior to rho_p
+
 C     PTRACERS_EvPrRn   :: tracer concentration in Rain, Evap & RunOff
 C       notes: a) used if both NonLin_FrSurf & useRealFreshWater are set.
 C              b) use pTracer surface (local) value if = UNSET_RL (default)
@@ -34,7 +35,8 @@ C     PTRACERS_resetPhase   :: Phase (s) to reset ptracers
       _RL PTRACERS_diffK4(PTRACERS_num)
       _RL PTRACERS_diffKrNr(Nr,PTRACERS_num)
       _RL PTRACERS_ref(Nr,PTRACERS_num)
-      _RL PTRACERS_wRise
+      _RL PTRACERS_rho_p
+      _RL PTRACERS_wRiseConst
       _RL PTRACERS_EvPrRn(PTRACERS_num)
       _RL PTRACERS_startStepFwd(PTRACERS_num)
       _RL PTRACERS_resetFreq(PTRACERS_num)
@@ -48,7 +50,8 @@ C     PTRACERS_resetPhase   :: Phase (s) to reset ptracers
      &     PTRACERS_diffK4,
      &     PTRACERS_diffKrNr,
      &     PTRACERS_ref,
-     &     PTRACERS_wRise,
+     &     PTRACERS_rho_p,
+     &     PTRACERS_wRiseConst,
      &     PTRACERS_EvPrRn,
      &     PTRACERS_startStepFwd,
      &     PTRACERS_resetFreq,

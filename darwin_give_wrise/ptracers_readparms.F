@@ -60,7 +60,8 @@ C     tauTr1ClimRelax :: old parameter (will be removed 1 day)
      &     PTRACERS_diffKr,
      &     PTRACERS_diffKrNr,
      &     PTRACERS_ref,
-     &     PTRACERS_wRise,
+     &     PTRACERS_rho_p,
+     &     PTRACERS_wRiseConst, 
      &     PTRACERS_EvPrRn,
      &     PTRACERS_useGMRedi,
      &     PTRACERS_useDWNSLP,
@@ -104,9 +105,10 @@ C     Set defaults values for parameters in PTRACERS.h
       PTRACERS_dumpFreq    = dumpFreq
       PTRACERS_taveFreq    = taveFreq
       PTRACERS_monitorFreq = monitorFreq
-      PTRACERS_Iter0   = 0
-      PTRACERS_numInUse=-1
-      PTRACERS_wRise= 0. _d 0
+      PTRACERS_Iter0    = 0
+      PTRACERS_numInUse =-1
+      PTRACERS_rho_p    = rhoConst
+      PTRACERS_wRiseConst  = 0. _d 0
       DO iTracer=1,PTRACERS_num
         PTRACERS_startStepFwd(iTracer) = baseTime
         PTRACERS_resetFreq (iTracer) = 0.
