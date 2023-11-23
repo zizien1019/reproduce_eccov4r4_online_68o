@@ -55,9 +55,6 @@ C  myTime           :: model time
 C  myIter           :: time-step number
 C  myThid           :: thread number
 
-C  wRise            :: rising velocity
-      _RL wRise     (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
-
       INTEGER bi, bj
       _RS recip_hFac(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL uFld      (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
@@ -190,7 +187,7 @@ C-    Initialise tracer tendency to zero
         L_fric = 1.0D-6
 C     Take wRiseConst if rho_p is not specified
 C     anyway wRiseConst is default to zero
-        IF (PTRACERS_rho_p .NE. zeroRL) THEN
+        IF (PTRACERS_rho_p(iTracer) .EQ. zeroRL) THEN
          DO k=1,Nr
           DO j=1-OLy,sNy+OLy
            DO i=1-OLx,sNx+OLx
@@ -213,12 +210,13 @@ C-    So need to inlude "DYNVAR.h" to get access to theta & salt
           DO j=1-OLy,sNy+OLy
            DO i=1-OLx,sNx+OLx
 C-      Compute rising velocity with density difference
-            IF (rhoK .GE. PTRACERS_rho_p) THEN
-                wRise(i,j,k) = SQRT((rhoK-PTRACERS_rho_p) 
-     &          * gravity * L_fric / PTRACERS_rho_p)
+            IF (rhoK(i,j) .GE. PTRACERS_rho_p(iTracer)) THEN
+                wRise(i,j,k) = SQRT(rhoK(i,j)-PTRACERS_rho_p(iTracer)) 
+     &          * SQRT(gravity * L_fric / PTRACERS_rho_p(iTracer))
             ELSE
-                wRise(i,j,k) = - SQRT((PTRACERS_rho_p-rhoK) 
-     &          * gravity * L_fric / PTRACERS_rho_p)
+                wRise(i,j,k) = - SQRT(PTRACERS_rho_p(iTracer)-rhoK(i,j)) 
+     &          * SQRT(gravity * L_fric / PTRACERS_rho_p(iTracer))
+            ENDIF
            ENDDO
           ENDDO
          ENDDO
@@ -235,6 +233,7 @@ C     And can use implicit vertical advection, too.
           DO i=1-OLx,sNx+OLx
            IF (maskC(i,j,k,bi,bj).NE.0.) THEN
             wPart(i,j,k) = wfld(i,j,k) + wRise(i,j,k)
+           ENDIF
           ENDDO
          ENDDO
         ENDDO

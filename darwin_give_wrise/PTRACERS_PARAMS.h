@@ -35,7 +35,7 @@ C     PTRACERS_resetPhase   :: Phase (s) to reset ptracers
       _RL PTRACERS_diffK4(PTRACERS_num)
       _RL PTRACERS_diffKrNr(Nr,PTRACERS_num)
       _RL PTRACERS_ref(Nr,PTRACERS_num)
-      _RL PTRACERS_rho_p
+      _RL PTRACERS_rho_p(PTRACERS_num)
       _RL PTRACERS_wRiseConst
       _RL PTRACERS_EvPrRn(PTRACERS_num)
       _RL PTRACERS_startStepFwd(PTRACERS_num)

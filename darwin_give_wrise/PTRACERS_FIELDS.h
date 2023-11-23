@@ -14,9 +14,6 @@ C     COMMON /PTRACERS_FIELDS/
 C     pTracer  :: passive tracer concentration (tr per unit volume).
 C     gpTrNm1  :: work-space for time-stepping
 C     surfaceForcingPTr :: passive tracer surface forcing
-C     wRise    :: >0 : rising velocity
-C                 <0 : sinking velocity
-C                 that depends on rho_p & water density
       _RL  pTracer (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy,
      &              PTRACERS_num)
       _RL  gpTrNm1 (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy,

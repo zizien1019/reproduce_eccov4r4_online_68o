@@ -107,9 +107,9 @@ C     Set defaults values for parameters in PTRACERS.h
       PTRACERS_monitorFreq = monitorFreq
       PTRACERS_Iter0    = 0
       PTRACERS_numInUse =-1
-      PTRACERS_rho_p    = rhoConst
       PTRACERS_wRiseConst  = 0. _d 0
       DO iTracer=1,PTRACERS_num
+        PTRACERS_rho_p(iTracer) = rhoConst
         PTRACERS_startStepFwd(iTracer) = baseTime
         PTRACERS_resetFreq (iTracer) = 0.
         PTRACERS_resetPhase(iTracer) = 0.

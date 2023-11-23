@@ -143,8 +143,10 @@ C--   Print a summary of pTracer parameter values:
 #endif
         CALL WRITE_1D_RL( PTRACERS_ref(1,iTracer), Nr, INDEX_K,
      &     'PTRACERS_ref =', ' /* Reference vertical profile */')
-        CALL WRITE_0D_RL( PTRACERS_wRise, INDEX_NONE,
-     &     'PTRACERS_wRise =', ' /* Rise velocity */')
+        CALL WRITE_0D_RL( PTRACERS_wRiseConst, INDEX_NONE,
+     &     'PTRACERS_wRiseConst =', ' /* Constant rise velocity */')
+        CALL WRITE_0D_RL( PTRACERS_rho_p(iTracer), INDEX_NONE,
+     &     'PTRACERS_rho_p =', ' /* particle densities */')
         CALL WRITE_0D_RL( PTRACERS_EvPrRn(iTracer), INDEX_NONE,
      &     'PTRACERS_EvPrRn =', '/* tracer conc. in Evap. & Rain */')
 
