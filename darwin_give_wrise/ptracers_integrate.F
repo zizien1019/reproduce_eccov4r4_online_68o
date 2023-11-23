@@ -106,7 +106,9 @@ C  gTr_trp          :: passive tracer total transport tendency before gchem
 C  rhoK             :: Density at level k
 C  wRise            :: Rising velocity field
 C  wPart            :: = wfld + wRise
+C  L_fric           :: Frictional length scale
       _RL rhoK  (1-OLx:sNx+OLx,1-OLy:sNy+OLy)
+      _RL L_fric
       _RL wRise (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL wPart (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
 
@@ -185,8 +187,10 @@ C-    Initialise tracer tendency to zero
          ENDDO
         ENDDO
 
-C     Take wRiseConst if specified
-        IF (PTRACERS_wRiseConst .NE. zeroRL) THEN
+        L_fric = 1.0D-6
+C     Take wRiseConst if rho_p is not specified
+C     anyway wRiseConst is default to zero
+        IF (PTRACERS_rho_p .NE. zeroRL) THEN
          DO k=1,Nr
           DO j=1-OLy,sNy+OLy
            DO i=1-OLx,sNx+OLx
@@ -194,28 +198,32 @@ C     Take wRiseConst if specified
            ENDDO
           ENDDO
          ENDDO
+
 C-    Otherwise compute rising velocity with PTRACERS_rho_p
         ELSE
          DO k=1,Nr
 C-    Density of k layer (below W(k)) reference to k-1 T-level.
 C-    So need to inlude "DYNVAR.h" to get access to theta & salt
-C           CALL FIND_RHO_2D(
-C      I        iMin, iMax, jMin, jMax, k-1,
-C      I        theta(1-OLx,1-OLy,k,bi,bj),
-C      I        salt (1-OLx,1-OLy,k,bi,bj),
-C      O        rhoK,
-C      I        k, bi, bj, myThid )
+            CALL FIND_RHO_2D(
+     I        iMin, iMax, jMin, jMax, k-1,
+     I        theta(1-OLx,1-OLy,k,bi,bj),
+     I        salt (1-OLx,1-OLy,k,bi,bj),
+     O        rhoK,
+     I        k, bi, bj, myThid )
           DO j=1-OLy,sNy+OLy
            DO i=1-OLx,sNx+OLx
-C-      Now use wRise to store water density
-C            wRise(i,j,k) = rhoK(i,j) + rhoConst
-            wRise(i,j,k) = PTRACERS_wRiseConst
-C-      not finished:
-C-      compute rising velocity with density difference
+C-      Compute rising velocity with density difference
+            IF (rhoK .GE. PTRACERS_rho_p) THEN
+                wRise(i,j,k) = SQRT((rhoK-PTRACERS_rho_p) 
+     &          * gravity * L_fric / PTRACERS_rho_p)
+            ELSE
+                wRise(i,j,k) = - SQRT((PTRACERS_rho_p-rhoK) 
+     &          * gravity * L_fric / PTRACERS_rho_p)
            ENDDO
           ENDDO
          ENDDO
-C-    endif(PTRACERS_wRiseConst .NE. zeroRL)
+
+C-    endif(PTRACERS_rho_p .NE. zeroRL)
         ENDIF
 
 C     Add wRise on top of wfld
@@ -225,7 +233,8 @@ C     And can use implicit vertical advection, too.
         DO k=1,Nr
          DO j=1-OLy,sNy+OLy
           DO i=1-OLx,sNx+OLx
-           wPart(i,j,k) = wfld(i,j,k) + wRise(i,j,k)
+           IF (maskC(i,j,k,bi,bj).NE.0.) THEN
+            wPart(i,j,k) = wfld(i,j,k) + wRise(i,j,k)
           ENDDO
          ENDDO
         ENDDO

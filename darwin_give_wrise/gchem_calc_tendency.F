@@ -88,64 +88,18 @@ C
 C     gchemTendency is re-initialized here
          DO k = 1, Nr
             DO j = 1-OLy, sNy+OLy
-                  DO i = 1-OLx, sNx+OLx
-                        gchemTendency(i,j,k,bi,bj,jTr) = 0. _d 0
-                  ENDDO
+             DO i = 1-OLx, sNx+OLx
+              gchemTendency(i,j,k,bi,bj,jTr) = 0. _d 0
+             ENDDO
             ENDDO
          ENDDO
-C         DO k = 2, Nr
-C     calculate the tendency corresponding to a rising/sinking velocity
-C            DO j = 1-OLy, sNy+OLy
-C             DO i = 1-OLx, sNx+OLx
-C              IF (maskC(i,j,k,bi,bj) .NE. zeroRS .AND.
-C     &         maskC(i,j,k-1,bi,bj) .NE. zeroRS) THEN
-C                  d1 = _hFacC(i,j,k-1,bi,bj) * drF(k-1)
-C                  d2 = _hFacC(i,j, k ,bi,bj) * drF( k )
-C                  IF ( w_r .GE. 0.) THEN
-C      when positively buoyant,
-C                        weightA(i,j) = w_r / d1
-C                        weightB(i,j) = w_r / d2
-C                  ELSE
-C      when negatively buoyant,
-C                        weightA(i,j) = - w_r / d1
-C                        weightB(i,j) = - w_r / d2
-C                  ENDIF
-C              ELSE
-C      if protrudes the boundary then do nothing 
-C                  weightA(i,j) = 0.0
-C                  weightB(i,j) = 0.0
-C              ENDIF
-C             ENDDO
-C            ENDDO
-C            DO j = 1-OLy, sNy+OLy
-C             DO i = 1-OLx, sNx+OLx
-C              IF (PTRACERS_wRise .GE. 0. _d 0) THEN
-C                  delTrac = pTracer(i,j,k,bi,bj,jTr)
-C                  gchemTendency(i,j,k-1,bi,bj,jTr) = 
-C     &              gchemTendency(i,j,k-1,bi,bj,jTr)
-C     &              + weightA(i,j)*delTrac
-C                  gchemTendency(i,j,k,bi,bj,jTr) = 
-C     &              gchemTendency(i,j,k,bi,bj,jTr)
-C     &              - weightB(i,j)*delTrac
-C              ELSE
-C                  delTrac = pTracer(i,j,k-1,bi,bj,jTr)
-C                  gchemTendency(i,j,k-1,bi,bj,jTr) = 
-C     &              gchemTendency(i,j,k-1,bi,bj,jTr)
-C     &              - weightA(i,j)*delTrac
-C                  gchemTendency(i,j,k,bi,bj,jTr) = 
-C     &              gchemTendency(i,j,k,bi,bj,jTr)
-C     &              + weightB(i,j)*delTrac
-C              ENDIF
-C          
-C             ENDDO
-C            ENDDO
-C         ENDDO
+
          DO k = 1, Nr
             DO j = 1-OLy, sNy+OLy
              DO i = 1-OLx, sNx+OLx
-                  gchemTendency(i,j,k,bi,bj,jTr) = 
-     &             gchemTendency(i,j,k,bi,bj,jTr)
-     &             + gchemSource(i,j,k,bi,bj,jTr)
+              gchemTendency(i,j,k,bi,bj,jTr) = 
+     &           gchemTendency(i,j,k,bi,bj,jTr)
+     &           + gchemSource(i,j,k,bi,bj,jTr)
              ENDDO
             ENDDO
          ENDDO
