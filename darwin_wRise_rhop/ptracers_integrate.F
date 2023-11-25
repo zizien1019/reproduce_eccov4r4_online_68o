@@ -209,15 +209,17 @@ C-    So need to inlude "DYNVAR.h" to get access to theta & salt
      I        k, bi, bj, myThid )
           DO j=1-OLy,sNy+OLy
            DO i=1-OLx,sNx+OLx
+C-      find_rho gives relative density
+C-      convert back to true density 
+            rhoK(i,j) = rhoK(i,j) + rhoConst
 C-      Compute rising velocity with density difference
             IF (rhoK(i,j) .GE. PTRACERS_rho_p(iTracer)) THEN
-                wRise(i,j,k) = SQRT(rhoK(i,j)-PTRACERS_rho_p(iTracer)) 
-     &          * SQRT(gravity * L_fric)
-     &          / SQRT(PTRACERS_rho_p(iTracer) + rhoConst)
+                wRise(i,j,k)
+     &          = SQRT(rhoK(i,j)-PTRACERS_rho_p(iTracer)) 
+     &          * SQRT(gravity * L_fric / PTRACERS_rho_p(iTracer))
             ELSE
                 wRise(i,j,k) = - SQRT(PTRACERS_rho_p(iTracer)-rhoK(i,j)) 
-     &          * SQRT(gravity * L_fric)
-     &          / SQRT(PTRACERS_rho_p(iTracer) + rhoConst)
+     &          * SQRT(gravity * L_fric / PTRACERS_rho_p(iTracer))
             ENDIF
            ENDDO
           ENDDO
