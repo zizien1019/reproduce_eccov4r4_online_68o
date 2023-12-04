@@ -19,7 +19,7 @@ C                          analogy to tRef and sRef, hence the name
 
 C     PTRACERS_wRiseConst :: constant rising velocity
 C     PTRACERS_rho_p    :: tracer density
-C     PTRACERS_d_p      :: plastic particle bined sizes
+C     PTRACERS_d_p      :: plastic particle binned sizes
 C     PTRACERS_rFrag    :: fragmentation rate of plastic
 
 C     *** when specified, wRiseConst is prior to rho_p

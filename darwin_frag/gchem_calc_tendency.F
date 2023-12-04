@@ -127,6 +127,22 @@ C     gchemTendency is computed here
         ENDDO
        ENDDO
 
+C     Apply mask
+       DO jTr = 1, GCHEM_tendTr_num
+        DO bj = myByLo(myThid), myByHi(myThid)
+         DO bi = myBxLo(myThid), myBxHi(myThid)
+          DO k=1,Nr
+           DO j=1-OLy,sNy+OLy
+            DO i=1-OLx,sNx+OLx
+             IF (maskC(i,j,k,bi,bj).EQ.0.)
+     &           gchemTendency(i,j,k,bi,bj,jTr)=0. _d 0
+            ENDDO
+           ENDDO
+          ENDDO
+         ENDDO
+        ENDDO
+       ENDDO
+
       ENDIF
 C     ========================
 C     Here ends the modification.

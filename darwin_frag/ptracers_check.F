@@ -148,7 +148,7 @@ C--   Print a summary of pTracer parameter values:
         CALL WRITE_0D_RL( PTRACERS_rho_p, INDEX_NONE,
      &     'PTRACERS_rho_p =', ' /* particle Density */')
         CALL WRITE_1D_RL( PTRACERS_d_p(iTracer), INDEX_NONE,
-     &     'PTRACERS_d_p =', ' /* particle bined sizes */')
+     &     'PTRACERS_d_p =', ' /* particle binned sizes */')
         CALL WRITE_0D_RL( PTRACERS_rFrag, INDEX_NONE,
      &     'PTRACERS_rFrag =', 
      &     ' /* Fragmentation/degradation rate (per hour!) */')
