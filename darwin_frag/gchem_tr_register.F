@@ -91,7 +91,8 @@ C ==================
 C I dont care how many tracers it register for this test 
 C I will register my own number of tracers
 C--   Set the number I use for geo-chemistry tracers
-      gchem_Tracer_num = 1
+# include "PTRACERS_PARAMS.h"
+      gchem_Tracer_num = PTRACERS_numInUse
       gchem_sepFTr_num = 0
 
 

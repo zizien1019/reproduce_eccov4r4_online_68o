@@ -44,7 +44,7 @@ C  tmpSourceFile        :: temporary source file name to read in
       CHARACTER*(MAX_LEN_FNAM) tmpSourceFile
 CEOP
 
-C     gchemSource & gchemTendency are initialized here
+C     gchemSource is initialized here
       DO jTr = 1, GCHEM_tendTr_num
        DO bj=myByLo(myThid),myByHi(myThid)
         DO bi=myBxLo(myThid),myBxHi(myThid)
@@ -52,7 +52,6 @@ C     gchemSource & gchemTendency are initialized here
           DO j = 1-OLy, sNy+OLy
            DO i = 1-OLx, sNx+OLx
             gchemSource(i,j,k,bi,bj,jTr) = 0. _d 0
-            gchemTendency(i,j,k,bi,bj,jTr) = 0. _d 0
            ENDDO
           ENDDO
          ENDDO
@@ -64,16 +63,22 @@ C     Read the source file into gchemSource.
 C     But only one filename is used here.
 C     Maybe find some way to loop over more filenames in the future.
       IF (nIter0.EQ.PTRACERS_Iter0) THEN
-C       DO jTr = 1, GCHEM_tendTr_num
+       DO jTr = 1, GCHEM_tendTr_num
 C     read up to three files
 C     last argument of gchemSource is the tracer number
-        tmpSourceFile = Filename1
+        IF (jTr .EQ. 1) THEN
+            tmpSourceFile = Filename1
+        ELSEIF ((jTr.EQ.2).AND.(GCHEM_tendTr_num.GE.2)) THEN
+            tmpSourceFile = Filename2
+        ELSEIF ((jTr.EQ.3).AND.(GCHEM_tendTr_num.GE.3)) THEN
+            tmpSourceFile = Filename3
+        ENDIF
         IF ( tmpSourceFile .NE. ' ' ) THEN
          CALL READ_FLD_XYZ_RL(tmpSourceFile,' ',
-     &        gchemSource(1-OLx,1-OLy,1,1,1,1),0,myThid)
+     &        gchemSource(1-OLx,1-OLy,1,1,1,jTr),0,myThid)
         ENDIF
 
-C       ENDDO
+       ENDDO
       ENDIF
 
 C     Apply mask

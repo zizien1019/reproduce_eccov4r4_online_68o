@@ -82,19 +82,39 @@ C     ** Not sure if it is OK to put an upwind scheme here **
 C     PTRACERS_wRise    :: the rising/sinking velocity
 C      w_r = PTRACERS_wRise
 C
-      DO jTr = 1, GCHEM_tendTr_num
-       DO bj=myByLo(myThid),myByHi(myThid)
-        DO bi=myBxLo(myThid),myBxHi(myThid)
+      IF (useGCHEM) THEN
+
+       DO jTr = 1, GCHEM_tendTr_num
+        DO bj=myByLo(myThid),myByHi(myThid)
+         DO bi=myBxLo(myThid),myBxHi(myThid)
 C     gchemTendency is re-initialized here
-         DO k = 1, Nr
+          DO k = 1, Nr
             DO j = 1-OLy, sNy+OLy
              DO i = 1-OLx, sNx+OLx
               gchemTendency(i,j,k,bi,bj,jTr) = 0. _d 0
              ENDDO
             ENDDO
+          ENDDO
          ENDDO
+        ENDDO
+       ENDDO
 
-         DO k = 1, Nr
+C     gchemTendency is computed here
+       IF (GCHEM_tendTr_num .GE. 2) THEN
+        DO jTr = 1, GCHEM_tendTr_num-1
+           CALL PLASTIC_FRAG(
+     I                       pTracer     (1-OLx,1-OLy,1,bi,bj,jTr),
+     U                       gchemTendency(1-OLx,1-OLy,1,bi,bj,jTr),
+     U                       gchemTendency(1-OLx,1-OLy,1,bi,bj,jTr+1),
+     I                       bi, bj, iMin, iMax, jMin, jMax,
+     I                       myTime, myIter, myThid )
+        ENDDO
+       ENDIF
+
+       DO jTr = 1, GCHEM_tendTr_num
+        DO bj=myByLo(myThid),myByHi(myThid)
+         DO bi=myBxLo(myThid),myBxHi(myThid)
+          DO k = 1, Nr
             DO j = 1-OLy, sNy+OLy
              DO i = 1-OLx, sNx+OLx
               gchemTendency(i,j,k,bi,bj,jTr) = 
@@ -102,11 +122,12 @@ C     gchemTendency is re-initialized here
      &           + gchemSource(i,j,k,bi,bj,jTr)
              ENDDO
             ENDDO
+          ENDDO
          ENDDO
         ENDDO
        ENDDO
-      ENDDO
 
+      ENDIF
 C     ========================
 C     Here ends the modification.
 C     ======================== 
