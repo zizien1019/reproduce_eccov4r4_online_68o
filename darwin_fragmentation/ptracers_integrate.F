@@ -104,8 +104,10 @@ C  rhoK             :: Density at level k
 C  wRise            :: Rising velocity field
 C  wPart            :: = wfld + wRise
 C  L_fric           :: Frictional length scale
+C  mu_f             :: viscosity of sea water
       _RL rhoK  (1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL L_fric
+      _RL mu_f
       _RL wRise (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL wPart (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
 
@@ -185,9 +187,10 @@ C-    Initialise tracer tendency to zero
         ENDDO
 
         L_fric = 1.0D-6
+        mu_f = 1.08D-3
 C     Take wRiseConst if rho_p is not specified
 C     anyway wRiseConst is default to zero
-        IF (PTRACERS_rho_p(iTracer) .EQ. zeroRL) THEN
+        IF (PTRACERS_rho_p .EQ. zeroRL) THEN
          DO k=1,Nr
           DO j=1-OLy,sNy+OLy
            DO i=1-OLx,sNx+OLx
@@ -209,16 +212,15 @@ C-    So need to inlude "DYNVAR.h" to get access to theta & salt
      I        k, bi, bj, myThid )
           DO j=1-OLy,sNy+OLy
            DO i=1-OLx,sNx+OLx
+C-      find_rho gives relative density
+C-      convert back to true density 
+            rhoK(i,j) = rhoK(i,j) + rhoConst
 C-      Compute rising velocity with density difference
-            IF (rhoK(i,j) .GE. PTRACERS_rho_p(iTracer)) THEN
-                wRise(i,j,k) = SQRT(rhoK(i,j)-PTRACERS_rho_p(iTracer)) 
-     &          * SQRT(gravity * L_fric)
-     &          / SQRT(PTRACERS_rho_p(iTracer) + rhoConst)
-            ELSE
-                wRise(i,j,k) = - SQRT(PTRACERS_rho_p(iTracer)-rhoK(i,j)) 
-     &          * SQRT(gravity * L_fric)
-     &          / SQRT(PTRACERS_rho_p(iTracer) + rhoConst)
-            ENDIF
+C-      ******  dependency on particle size to be added
+C-              (rho_p-rho_w)*g * d.^2/(18*uf)
+                wRise(i,j,k)
+     &          = (PTRACERS_rho_p-rhoK(i,j)) * gravity 
+     &          * PTRACERS_d_p(iTracer)^2 / 18 / mu_f
            ENDDO
           ENDDO
          ENDDO
