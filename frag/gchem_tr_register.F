@@ -15,6 +15,7 @@ C !USES: ===============================================================
 #include "EEPARAMS.h"
 #include "PARAMS.h"
 #include "GCHEM.h"
+#include "GCHEM_SIZE.h"
 
 C !INPUT PARAMETERS: ===================================================
 C  myThid         :: thread number
@@ -91,8 +92,8 @@ C ==================
 C I dont care how many tracers it register for this test 
 C I will register my own number of tracers
 C--   Set the number I use for geo-chemistry tracers
-# include "PTRACERS_PARAMS.h"
-      gchem_Tracer_num = PTRACERS_numInUse
+
+      gchem_Tracer_num = GCHEM_tendTr_num
       gchem_sepFTr_num = 0
 
 

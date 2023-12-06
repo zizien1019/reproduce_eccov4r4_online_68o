@@ -6,10 +6,22 @@
  PTRACERS_Iter0 = 1,
 
  PTRACERS_wRiseConst = 0.,
- PTRACERS_rho_p = 1050.,
- PTRACERS_d_p(1) = 50.E-6,
- PTRACERS_d_p(2) = 5.E-6,
+ PTRACERS_rho_p = 1200.,
+ PTRACERS_d_p(1) = 1.E-4,
+ PTRACERS_d_p(2) = 1.E-5,
  PTRACERS_rFrag = 2.E-7,
+
+# if rho_p = 1100
+# for d_p = 0.1 mm, w_s = 0.38 mm/s
+# for d_p = 0.01mm, w_s = 0.0038 mm/s
+
+# if rho_p = 1200
+# for d_p = 0.1 mm, w_s = 0.88 mm/s
+# for d_p = 0.01 mm, w_s = 0.0088 mm/s
+
+# if rho_p = 1400
+# for d_p = 0.1 mm, w_s = 1.89 mm/s
+# for d_p = 0.01 mm, w_s = 0.0189 mm/s
 
 # # PTRACERS_dumpFreq is default to dumpFreq in "data"
 #  # every 7 days

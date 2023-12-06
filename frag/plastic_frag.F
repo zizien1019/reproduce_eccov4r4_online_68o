@@ -19,20 +19,27 @@ C     |   Smaller particles have lower sinking velocity.
 C     *==========================================================*
 
 C     !USES:
-      IMPLICIT NONE
 C     == GLobal variables ==
+      IMPLICIT NONE
 #include "SIZE.h"
+#include "GRID.h"
+#include "DYNVARS.h"
 #include "EEPARAMS.h"
 #include "PARAMS.h"
-#include "GRID.h"
+#include "PTRACERS_SIZE.h"
+#include "PTRACERS_PARAMS.h"
 #include "PTRACERS_FIELDS.h"
-# include "PTRACERS_SIZE.h"
-# include "PTRACERS_PARAMS.h"
+#include "GCHEM.h"
+#include "GCHEM_SIZE.h"
+#include "GCHEM_FIELDS.h"
+
 
 C     !INPUT/OUTPUT PARAMETERS:
 C     pTr_plt1  :: ocean larger plastic concentration
 C     gplt1     :: larger plastic tendency
 C     gplt2     :: smaller plastic tendency
+C     i,j       :: loop index
+C     k         :: vertical level
 C     bi, bj     :: current tile indices
 C     iMin,iMax  :: computation domain, 1rst index bounds
 C     jMin,jMax  :: computation domain, 2nd  index bounds
@@ -42,6 +49,7 @@ C     myThid     :: my Thread Id number
       _RL  pTr_plt1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL  gplt1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL  gplt2(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+      INTEGER i,j,k
       INTEGER bi, bj
       INTEGER iMin, iMax, jMin, jMax
       _RL  myTime
@@ -51,21 +59,15 @@ CEOP
 
 #ifdef ALLOW_PTRACERS
 
-      DO jTr = 1, GCHEM_tendTr_num
-       DO bj=myByLo(myThid),myByHi(myThid)
-        DO bi=myBxLo(myThid),myBxHi(myThid)
-         DO k = 1, Nr
-          DO j = 1-OLy, sNy+OLy
-           DO i = 1-OLx, sNx+OLx
-            glpt1(i,j,k,bi,bj,jTr) = 
-     &            pTr_plt1(i,j,k,bi,bj,jTr)
-     &            * PTRACERS_rFrag * delTrac / 3600
-            glpt2(i,j,k,bi,bj,jTr) =
-     &            pTr_plt1(i,j,k,bi,bj,jTr)
-     &            * PTRACERS_rFrag * delTrac / 3600
-           ENDDO
-          ENDDO
-         ENDDO
+      DO k = 1, Nr
+       DO j = 1-OLy, sNy+OLy
+        DO i = 1-OLx, sNx+OLx
+            gplt1(i,j,k) = 
+     &            pTr_plt1(i,j,k)
+     &            * PTRACERS_rFrag * dTtracerLev(k) / 3600
+            gplt2(i,j,k) =
+     &            pTr_plt1(i,j,k)
+     &            * PTRACERS_rFrag * dTtracerLev(k) / 3600
         ENDDO
        ENDDO
       ENDDO

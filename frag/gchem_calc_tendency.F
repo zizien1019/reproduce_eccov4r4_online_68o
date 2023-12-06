@@ -102,12 +102,17 @@ C     gchemTendency is re-initialized here
 C     gchemTendency is computed here
        IF (GCHEM_tendTr_num .GE. 2) THEN
         DO jTr = 1, GCHEM_tendTr_num-1
+         DO bj=myByLo(myThid),myByHi(myThid)
+          DO bi=myBxLo(myThid),myBxHi(myThid)
            CALL PLASTIC_FRAG(
      I                       pTracer     (1-OLx,1-OLy,1,bi,bj,jTr),
      U                       gchemTendency(1-OLx,1-OLy,1,bi,bj,jTr),
      U                       gchemTendency(1-OLx,1-OLy,1,bi,bj,jTr+1),
      I                       bi, bj, iMin, iMax, jMin, jMax,
      I                       myTime, myIter, myThid )
+
+          ENDDO
+         ENDDO
         ENDDO
        ENDIF
 
