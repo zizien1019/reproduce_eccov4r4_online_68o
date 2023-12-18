@@ -92,8 +92,10 @@
 # nTimeSteps=35051,
 #5yr
 # nTimeSteps=43200,
+#10yr
+nTimeSteps=86400,
 #20y:
-nTimeSteps=175295,
+# nTimeSteps=175295,
 #22y:
 #nTimeSteps=192839,
 #24y:
@@ -110,6 +112,7 @@ nTimeSteps=175295,
 # tauCD=172800.0,
 
  deltaTmom   =3600.,
+#  deltaTfreesurf=3600.,
  deltaTtracer=1800.,
  deltaTfreesurf=1800.,
  deltaTClock =3600.,
@@ -124,6 +127,10 @@ nTimeSteps=175295,
  pChkptFreq  =31536000.0,
  chkptFreq   =31536000.0,
 # taveFreq    =31536000.0,
+# # every 30 day
+# dumpFreq = 2592000.0,
+# # every 91.3125 days
+#  dumpFreq = 7889400,
 dumpFreq    =31536000.0,
 # monitorFreq = 7200.0,
 # monitorFreq = 6307200.0,

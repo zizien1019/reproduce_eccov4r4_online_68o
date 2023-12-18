@@ -63,11 +63,13 @@ CEOP
        DO j = 1-OLy, sNy+OLy
         DO i = 1-OLx, sNx+OLx
             gplt1(i,j,k) = 
-     &            pTr_plt1(i,j,k)
-     &            * PTRACERS_rFrag * dTtracerLev(k) / 3600
+     &          - pTr_plt1(i,j,k)
+     &            * PTRACERS_rFrag / 3600
             gplt2(i,j,k) =
      &            pTr_plt1(i,j,k)
-     &            * PTRACERS_rFrag * dTtracerLev(k) / 3600
+     &            * PTRACERS_rFrag / 3600
+C     this subroutine calculates the tendency so
+C     do not   * dt   !!!!
         ENDDO
        ENDDO
       ENDDO

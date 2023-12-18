@@ -1,14 +1,17 @@
 # Packages
  &PACKAGES
+
  usePtracers=.TRUE.,
  useGCHEM=.TRUE.,
+ useSeaice= .FALSE.,
+
  useGMRedi= .TRUE.,
  useGGL90=.TRUE.,
  useSALT_PlUME=.TRUE.,
  useCAL   = .TRUE.,
- useSeaice= .FALSE.,
  useEXF   = .TRUE.,
  useDiagnostics=.FALSE.,
+ 
 # useRBCS  = .TRUE.,
 # useKPP   = .TRUE.,
 # useSBO   = .TRUE.,
