@@ -7,11 +7,10 @@ CBOP
 C !ROUTINE: PTRACERS_INTEGRATE
 
 C ==================
-C Modification by Alan 05,Nov,2023
+C Modification by Alan 18,Jan,2024
 C previously this routine calculates advective flux with ufld,vfld,wfld
-C wPart = wfld + wRise , i put
-C to include wRise in the generic adv-diff scheme
-C and thus can be treated implicitly
+C wPart = 0
+C to make the model 2D
 C ==================
 
 C !INTERFACE: ==========================================================
@@ -185,56 +184,13 @@ C-    Initialise tracer tendency to zero
         ENDDO
 
         L_fric = 1.0D-6
-C     Take wRiseConst if rho_p is not specified
-C     anyway wRiseConst is default to zero
-        IF (PTRACERS_rho_p(iTracer) .EQ. zeroRL) THEN
-         DO k=1,Nr
-          DO j=1-OLy,sNy+OLy
-           DO i=1-OLx,sNx+OLx
-            wRise(i,j,k) = PTRACERS_wRiseConst
-           ENDDO
-          ENDDO
-         ENDDO
 
-C-    Otherwise compute rising velocity with PTRACERS_rho_p
-        ELSE
-         DO k=1,Nr
-C-    Density of k layer (below W(k)) reference to k-1 T-level.
-C-    So need to inlude "DYNVAR.h" to get access to theta & salt
-            CALL FIND_RHO_2D(
-     I        iMin, iMax, jMin, jMax, k-1,
-     I        theta(1-OLx,1-OLy,k,bi,bj),
-     I        salt (1-OLx,1-OLy,k,bi,bj),
-     O        rhoK,
-     I        k, bi, bj, myThid )
-          DO j=1-OLy,sNy+OLy
-           DO i=1-OLx,sNx+OLx
-C-      Compute rising velocity with density difference
-            IF (rhoK(i,j) .GE. PTRACERS_rho_p(iTracer)) THEN
-                wRise(i,j,k) = SQRT(rhoK(i,j)-PTRACERS_rho_p(iTracer)) 
-     &          * SQRT(gravity * L_fric)
-     &          / SQRT(PTRACERS_rho_p(iTracer) + rhoConst)
-            ELSE
-                wRise(i,j,k) = - SQRT(PTRACERS_rho_p(iTracer)-rhoK(i,j)) 
-     &          * SQRT(gravity * L_fric)
-     &          / SQRT(PTRACERS_rho_p(iTracer) + rhoConst)
-            ENDIF
-           ENDDO
-          ENDDO
-         ENDDO
-
-C-    endif(PTRACERS_rho_p .NE. zeroRL)
-        ENDIF
-
-C     Add wRise on top of wfld
-C     now rising/sinking velocity
-C     will be treated within GAD as well
-C     And can use implicit vertical advection, too. 
+C     Set vertical velocity to be zero
         DO k=1,Nr
          DO j=1-OLy,sNy+OLy
           DO i=1-OLx,sNx+OLx
            IF (maskC(i,j,k,bi,bj).NE.0.) THEN
-            wPart(i,j,k) = wfld(i,j,k) + wRise(i,j,k)
+            wPart(i,j,k) = 0. _d 0
            ENDIF
           ENDDO
          ENDDO
@@ -344,7 +300,8 @@ CADJ &      = comlev1_bibj_ptracers, key=ikey, byte=isbyte
 C-    Start vertical index (k) loop (Nr:1)
         calcAdvection = .NOT.PTRACERS_MultiDimAdv(iTracer)
      &                  .AND. (PTRACERS_advScheme(iTracer).NE.0)
-        DO k=Nr,1,-1
+C        DO k=Nr,1,-1
+        DO k=1,1
 #ifdef ALLOW_AUTODIFF_TAMC
           kkey = k + (ikey-1)*Nr
 #endif /* ALLOW_AUTODIFF_TAMC */
@@ -388,7 +345,7 @@ C--   Collect forcing term in local array gTrForc:
 
 C-    Calculate active tracer tendencies (gTracer) due to internal processes
 C      (advection, [explicit] diffusion, parameterizations,...)
-          CALL GAD_CALC_RHS(
+          CALL GAD_CALC_RHS_2DPTR(
      I             bi,bj, iMin,iMax,jMin,jMax, k,kM1, kUp,kDown,
      I             xA, yA, maskUp, uFld(1-OLx,1-OLy,k),
      I             vFld(1-OLx,1-OLy,k), wPart(1-OLx,1-OLy,k),

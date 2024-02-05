@@ -214,12 +214,12 @@ C-    So need to inlude "DYNVAR.h" to get access to theta & salt
            DO i=1-OLx,sNx+OLx
 C-      find_rho gives relative density
 C-      convert back to true density 
-            rhoK(i,j) = rhoK(i,j) + rhoConst
+C-      by doing  rho(i,j) = rhoK(i,j) + rhoConst
 C-      Compute rising velocity with density difference
 C-      ******  dependency on particle size to be added
 C-              (rho_p-rho_w)*g * d.^2/(18*uf)
                 wRise(i,j,k)
-     &          = (PTRACERS_rho_p-rhoK(i,j)) * gravity 
+     &          = - (PTRACERS_rho_p-rhoK(i,j)-rhoConst) * gravity 
      &          * PTRACERS_d_p(iTracer)**2 / 18 / mu_f
            ENDDO
           ENDDO

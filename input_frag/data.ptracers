@@ -9,7 +9,9 @@
  PTRACERS_rho_p = 1200.,
  PTRACERS_d_p(1) = 1.E-4,
  PTRACERS_d_p(2) = 1.E-5,
- PTRACERS_rFrag = 2.E-7,
+# fragmentation rate (1/hr)
+PTRACERS_rFrag = 2.E-7,
+# PTRACERS_rFrag = 0.,
 
 # if rho_p = 1100
 # for d_p = 0.1 mm, w_s = 0.38 mm/s
@@ -36,7 +38,7 @@
  PTRACERS_dumpFreq = 7889400,
 
 #
-PTRACERS_advScheme(1) = 77,
+PTRACERS_advScheme(1) = 30,
 PTRACERS_ImplVertAdv(1) = .FALSE.
 PTRACERS_useGMRedi(1)=.TRUE.,
 # PTRACERS_diffKh(1) = 0.1E3,
@@ -44,7 +46,7 @@ PTRACERS_useGMRedi(1)=.TRUE.,
 PTRACERS_initialFile(1) = '',
 
 #
-PTRACERS_advScheme(2) = 77,
+PTRACERS_advScheme(2) = 30,
 PTRACERS_ImplVertAdv(2) = .FALSE.
 PTRACERS_useGMRedi(2)=.TRUE.,
 # PTRACERS_diffKh(2) = 0.1E3,
