@@ -19,7 +19,8 @@
 
 #
 PTRACERS_advScheme(1) = 77,
-PTRACERS_rho_p(1) = 900.,
+PTRACERS_rho_p(1) = 0.,
+# PTRACERS_stayPositive(1) = .TRUE.,
 PTRACERS_ImplVertAdv(1) = .FALSE.
 PTRACERS_useGMRedi(1)=.TRUE.,
 PTRACERS_diffKh(1) = 0.1E3,

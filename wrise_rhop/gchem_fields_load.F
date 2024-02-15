@@ -83,7 +83,7 @@ C     Apply mask
          DO k=1,Nr
           DO j=1-OLy,sNy+OLy
            DO i=1-OLx,sNx+OLx
-            IF (maskC(i,j,k,bi,bj).EQ.0.)
+            IF (maskC(i,j,k,bi,bj) .EQ. 0.)
      &           gchemSource(i,j,k,bi,bj,jTr)=0. _d 0
            ENDDO
           ENDDO

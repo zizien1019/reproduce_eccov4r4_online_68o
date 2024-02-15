@@ -24,14 +24,10 @@
 ### diffKrBL79surf=0.1E-4,
 ### diffKrBL79deep=1.0E-4,
  bottomDragQuadratic = 0.001,
-
-# #when using ggl90
+#when using ggl90
  ivdc_kappa=10.,
- implicitViscosity=.TRUE.,
-
-# GMRedi needs 
  implicitDiffusion=.TRUE.,
-
+ implicitViscosity=.TRUE.,
  useRealFreshWaterFlux=.TRUE.,
 # balanceThetaClimRelax=.TRUE.,
  balanceSaltClimRelax=.TRUE.,
@@ -77,7 +73,7 @@
 
 # Time stepping parameters
  &PARM03
- nIter0=1,
+ nIter0=26292,
 #2 lev2 for testing:
 #nTimeSteps=8,
 #3month
@@ -85,13 +81,13 @@
 #18month
 #nTimeSteps=13110,
 #1yr
-# nTimeSteps = 8760,
+#  nTimeSteps = 8760,
 #2yr
 # nTimeSteps=17520,
 #4-yr from 2014 to 2017, inclusive
 # nTimeSteps=35051,
 #5yr
-nTimeSteps=43200,
+nTimeSteps=43800,
 #20y:
 # nTimeSteps=175295,
 #22y:
@@ -110,8 +106,8 @@ nTimeSteps=43200,
 # tauCD=172800.0,
 
  deltaTmom   =3600.,
- deltaTtracer=3600.,
- deltaTfreesurf=3600.,
+ deltaTtracer=1800.,
+ deltaTfreesurf=1800.,
  deltaTClock =3600.,
 
 #when using ab2:
@@ -124,11 +120,14 @@ nTimeSteps=43200,
  pChkptFreq  =31536000.0,
  chkptFreq   =31536000.0,
 # taveFreq    =31536000.0,
-dumpFreq    =31536000.0,
+# annual dump
+# dumpFreq    =31536000.0,
+# seasonal dump
+ dumpFreq    =7884000.0,
 # monitorFreq = 7200.0,
 # monitorFreq = 6307200.0,
 # monitorFreq = 43200.0,
-monitorFreq = 31536000.0,
+ monitorFreq = 31536000.0,
  dumpInitAndLast = .TRUE.,
  adjDumpFreq = 31536000.0,
 #adjDumpFreq = 604800.0,

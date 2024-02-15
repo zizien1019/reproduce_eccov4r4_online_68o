@@ -6,7 +6,7 @@
  useGGL90=.TRUE.,
  useSALT_PlUME=.TRUE.,
  useCAL   = .TRUE.,
- useSeaice= .FALSE.,
+ useSeaice= .TRUE.,
  useEXF   = .TRUE.,
  useDiagnostics=.FALSE.,
 # useRBCS  = .TRUE.,

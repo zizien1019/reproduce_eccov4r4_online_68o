@@ -95,13 +95,18 @@ C     gchemTendency is re-initialized here
          ENDDO
 
          DO k = 1, Nr
-            DO j = 1-OLy, sNy+OLy
-             DO i = 1-OLx, sNx+OLx
-              gchemTendency(i,j,k,bi,bj,jTr) = 
-     &           gchemTendency(i,j,k,bi,bj,jTr)
-     &           + gchemSource(i,j,k,bi,bj,jTr)
-             ENDDO
-            ENDDO
+          DO j = 1-OLy, sNy+OLy
+           DO i = 1-OLx, sNx+OLx
+C     sink component accounts for 10% per month
+C     along coastline
+            IF (gchemSource(i,j,k,bi,bj,jTr).NE.0) THEN
+            gchemTendency(i,j,k,bi,bj,jTr) = 
+     &        gchemTendency(i,j,k,bi,bj,jTr)
+     &        - 0.0001324 * pTracer(i,j,k,bi,bj,jTr)
+     &        + gchemSource(i,j,k,bi,bj,jTr)
+            ENDIF
+           ENDDO
+          ENDDO
          ENDDO
         ENDDO
        ENDDO
