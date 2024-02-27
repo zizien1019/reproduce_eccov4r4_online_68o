@@ -25,7 +25,7 @@ PTRACERS_ImplVertAdv(1) = .FALSE.
 PTRACERS_useGMRedi(1)=.TRUE.,
 PTRACERS_diffKh(1) = 0.1E3,
 PTRACERS_diffKr(1) = 0.,
-PTRACERS_initialFile(1) = '',
+PTRACERS_initialFile(1) = 'source2010_coast.bin',
 
 # 
 # PTRACERS_ref(1,1)=0.,

@@ -8,7 +8,7 @@
 # Tracer source file
 #  source along coast based on Jambeck et al 2015.
 #  and scaled with 2015 GDP data from worldbank 
- Filename1 = 'source2010_coast.bin',
-#  Filename1 = '',
+#  Filename1 = 'source2010_coast.bin',
+ Filename1 = '',
  &
  

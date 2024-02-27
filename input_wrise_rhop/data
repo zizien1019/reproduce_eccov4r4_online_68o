@@ -25,6 +25,7 @@
 ### diffKrBL79deep=1.0E-4,
  bottomDragQuadratic = 0.001,
 #when using ggl90
+ cAdjFreq = 3600.,
  ivdc_kappa=10.,
  implicitDiffusion=.TRUE.,
  implicitViscosity=.TRUE.,
@@ -73,7 +74,7 @@
 
 # Time stepping parameters
  &PARM03
- nIter0=26292,
+ nIter0=0,
 #2 lev2 for testing:
 #nTimeSteps=8,
 #3month
@@ -87,9 +88,9 @@
 #4-yr from 2014 to 2017, inclusive
 # nTimeSteps=35051,
 #5yr
-nTimeSteps=43800,
+# nTimeSteps=43800,
 #20y:
-# nTimeSteps=175295,
+nTimeSteps=175295,
 #22y:
 #nTimeSteps=192839,
 #24y:
@@ -106,8 +107,8 @@ nTimeSteps=43800,
 # tauCD=172800.0,
 
  deltaTmom   =3600.,
- deltaTtracer=1800.,
- deltaTfreesurf=1800.,
+ deltaTtracer=3600.,
+ deltaTfreesurf=3600.,
  deltaTClock =3600.,
 
 #when using ab2:
