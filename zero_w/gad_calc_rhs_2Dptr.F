@@ -4,7 +4,10 @@
 #endif
 
 CBOP
-C !ROUTINE: GAD_CALC_RHS
+C !ROUTINE: GAD_CALC_RHS_2DPTR
+C 5-Mar-2024 by Alan
+C modified from gad_calc_rhs.F
+C remove all vertical fluxes so the tracer stays at a certain layer
 
 C !INTERFACE: ==========================================================
       SUBROUTINE GAD_CALC_RHS_2DPTR(
@@ -503,6 +506,215 @@ C       excluding advective terms:
       ENDIF
 #endif
 
+C--   Compute vertical flux fVerT(kUp) at interface k (between k-1 & k):
+C-    Advective flux in R
+#ifdef ALLOW_AIM
+C- a hack to prevent Water-Vapor vert.transport into the stratospheric level Nr
+      IF (calcAdvection .AND. .NOT.implicitAdvection .AND. k.GE.2 .AND.
+     &     (.NOT.useAIM .OR. trIdentity.NE.GAD_SALINITY .OR. k.LT.Nr)
+     &   ) THEN
+#else
+      IF (calcAdvection .AND. .NOT.implicitAdvection .AND. k.GE.2) THEN
+#endif
+       IF ( applyAB_onTracer ) THEN
+C-    Compute vertical advective flux in the interior using TracAB:
+        IF ( vertAdvecScheme.EQ.ENUM_CENTERED_2ND ) THEN
+           CALL GAD_C2_ADV_R( bi,bj,k, rTrans, TracAB, af, myThid )
+        ELSEIF ( vertAdvecScheme.EQ.ENUM_UPWIND_1RST
+     &          .OR. vertAdvecScheme.EQ.ENUM_DST2 ) THEN
+           CALL GAD_DST2U1_ADV_R( bi,bj,k,vertAdvecScheme,deltaTLev(k),
+     I              rTrans, wFld, TracAB,
+     O              af, myThid )
+        ELSEIF ( vertAdvecScheme.EQ.ENUM_FLUX_LIMIT ) THEN
+           CALL GAD_FLUXLIMIT_ADV_R( bi,bj,k, deltaTLev(k),
+     I              rTrans, wFld, TracAB,
+     O              af, myThid )
+        ELSEIF ( vertAdvecScheme.EQ.ENUM_UPWIND_3RD ) THEN
+           CALL GAD_U3_ADV_R( bi,bj,k, rTrans, TracAB, af, myThid )
+        ELSEIF (vertAdvecScheme.EQ.ENUM_CENTERED_4TH) THEN
+           CALL GAD_C4_ADV_R( bi,bj,k, rTrans, TracAB, af, myThid )
+        ELSEIF ( vertAdvecScheme.EQ.ENUM_DST3 ) THEN
+           CALL GAD_DST3_ADV_R( bi,bj,k, deltaTLev(k),
+     I              rTrans, wFld, TracAB,
+     O              af, myThid )
+        ELSEIF ( vertAdvecScheme.EQ.ENUM_DST3_FLUX_LIMIT ) THEN
+           CALL GAD_DST3FL_ADV_R( bi,bj,k, deltaTLev(k),
+     I              rTrans, wFld, TracAB,
+     O              af, myThid )
+#ifndef ALLOW_AUTODIFF
+        ELSEIF ( vertAdvecScheme.EQ.ENUM_OS7MP ) THEN
+           CALL GAD_OS7MP_ADV_R( bi,bj,k, deltaTLev(k),
+     I              rTrans, wFld, TracAB,
+     O              af, myThid )
+#endif
+        ELSE
+          STOP 'GAD_CALC_RHS: Bad vertAdvecScheme (R)'
+        ENDIF
+       ELSE
+C-    Compute vertical advective flux in the interior using TracerN:
+        IF ( vertAdvecScheme.EQ.ENUM_CENTERED_2ND ) THEN
+           CALL GAD_C2_ADV_R( bi,bj,k, rTrans, TracerN, af, myThid )
+        ELSEIF ( vertAdvecScheme.EQ.ENUM_UPWIND_1RST
+     &          .OR. vertAdvecScheme.EQ.ENUM_DST2 ) THEN
+           CALL GAD_DST2U1_ADV_R( bi,bj,k,vertAdvecScheme,deltaTLev(k),
+     I              rTrans, wFld, TracerN,
+     O              af, myThid )
+        ELSEIF ( vertAdvecScheme.EQ.ENUM_FLUX_LIMIT ) THEN
+           CALL GAD_FLUXLIMIT_ADV_R( bi,bj,k, deltaTLev(k),
+     I              rTrans, wFld, TracerN,
+     O              af, myThid )
+        ELSEIF ( vertAdvecScheme.EQ.ENUM_UPWIND_3RD ) THEN
+           CALL GAD_U3_ADV_R( bi,bj,k, rTrans, TracerN, af, myThid )
+        ELSEIF ( vertAdvecScheme.EQ.ENUM_CENTERED_4TH ) THEN
+           CALL GAD_C4_ADV_R( bi,bj,k, rTrans, TracerN, af, myThid )
+        ELSEIF( vertAdvecScheme.EQ.ENUM_DST3 ) THEN
+           CALL GAD_DST3_ADV_R( bi,bj,k, deltaTLev(k),
+     I              rTrans, wFld, TracerN,
+     O              af, myThid )
+        ELSEIF ( vertAdvecScheme.EQ.ENUM_DST3_FLUX_LIMIT ) THEN
+           CALL GAD_DST3FL_ADV_R( bi,bj,k, deltaTLev(k),
+     I              rTrans, wFld, TracerN,
+     O              af, myThid )
+#ifndef ALLOW_AUTODIFF
+        ELSEIF ( vertAdvecScheme.EQ.ENUM_OS7MP ) THEN
+           CALL GAD_OS7MP_ADV_R( bi,bj,k, deltaTLev(k),
+     I              rTrans, wFld, TracerN,
+     O              af, myThid )
+#endif
+        ELSE
+          STOP 'GAD_CALC_RHS: Bad vertAdvecScheme (R)'
+        ENDIF
+       ENDIF
+C-     add the advective flux to fVerT
+C-       DO j=1-OLy,sNy+OLy
+C-        DO i=1-OLx,sNx+OLx
+C-          fVerT(i,j,kUp) = fVerT(i,j,kUp) + af(i,j)*maskInC(i,j,bi,bj)
+C-        ENDDO
+C-       ENDDO
+#ifdef ALLOW_DIAGNOSTICS
+       IF ( useDiagnostics ) THEN
+          diagName = 'ADVr'//diagSufx
+          CALL DIAGNOSTICS_FILL( af, diagName, k,1, 2,bi,bj, myThid )
+C- note: needs to explicitly increment the counter since DIAGNOSTICS_FILL
+C        does it only if k=1 (never the case here)
+          IF ( k.EQ.2 ) CALL DIAGNOSTICS_COUNT(diagName,bi,bj,myThid)
+#ifdef ALLOW_LAYERS
+          IF ( useLayers ) THEN
+            CALL LAYERS_FILL(af,trIdentity,'AFR',k,1,2,bi,bj,myThid)
+          ENDIF
+#endif /* ALLOW_LAYERS */
+       ENDIF
+#endif
+      ENDIF
+
+C-    Diffusive flux in R
+C     Note: For K=1 then KM1=1 and this gives a dT/dr = 0 upper
+C           boundary condition.
+      IF (implicitDiffusion) THEN
+       DO j=1-OLy,sNy+OLy
+        DO i=1-OLx,sNx+OLx
+         df(i,j) = 0. _d 0
+        ENDDO
+       ENDDO
+      ELSE
+        CALL GAD_DIFF_R(
+     I                    bi,bj,k, maskup, KappaR, TracerN,
+     O                    df, myThid )
+      ENDIF
+
+      IF ( trUseDiffKr4 ) THEN
+        CALL GAD_BIHARM_R(
+     I                    bi,bj,k, maskUp, diffKr4, TracerN,
+     U                    df, myThid )
+      ENDIF
+
+#ifdef ALLOW_GMREDI
+C-    GM/Redi flux in R
+      IF ( trUseGMRedi ) THEN
+        CALL GMREDI_RTRANSPORT(
+     I         trIdentity, bi, bj, k, iMin, iMax, jMin, jMax,
+     I         maskUp, TracerN,
+     U         df,
+     I         myThid )
+      ENDIF
+#endif
+
+C-      DO j=1-OLy,sNy+OLy
+C-       DO i=1-OLx,sNx+OLx
+C-        fVerT(i,j,kUp) = fVerT(i,j,kUp) + df(i,j)
+C-       ENDDO
+C-      ENDDO
+
+#ifdef ALLOW_DIAGNOSTICS
+C-    Diagnostics of Tracer flux in R dir (mainly Diffusive terms),
+C       Explicit terms only & excluding advective terms:
+      IF ( useDiagnostics .AND.
+     &    (.NOT.implicitDiffusion .OR. trUseDiffKr4 .OR. trUseGMRedi)
+     &   ) THEN
+          diagName = 'DFrE'//diagSufx
+          CALL DIAGNOSTICS_FILL( df, diagName, k,1, 2,bi,bj, myThid )
+#ifdef ALLOW_LAYERS
+          IF ( useLayers ) THEN
+           CALL LAYERS_FILL(df,trIdentity,'DFR',k,1,2,bi,bj,myThid)
+          ENDIF
+#endif /* ALLOW_LAYERS */
+      ENDIF
+#endif
+
+#ifdef ALLOW_KPP
+C-    Set non local KPP transport term (ghat):
+      IF ( trUseKPP .AND. k.GE.2 ) THEN
+       DO j=1-OLy,sNy+OLy
+        DO i=1-OLx,sNx+OLx
+         df(i,j) = 0. _d 0
+        ENDDO
+       ENDDO
+       IF (trIdentity.EQ.GAD_TEMPERATURE) THEN
+        CALL KPP_TRANSPORT_T(
+     I           iMin,iMax,jMin,jMax,bi,bj,k,km1,
+     O           df,
+     I           myTime, myIter, myThid )
+       ELSEIF (trIdentity.EQ.GAD_SALINITY) THEN
+        CALL KPP_TRANSPORT_S(
+     I           iMin,iMax,jMin,jMax,bi,bj,k,km1,
+     O           df,
+     I           myTime, myIter, myThid )
+#ifdef ALLOW_PTRACERS
+       ELSEIF (trIdentity .GE. GAD_TR1) THEN
+        CALL KPP_TRANSPORT_PTR(
+     I           iMin,iMax,jMin,jMax,bi,bj,k,km1,
+     I           trIdentity-GAD_TR1+1,
+     O           df,
+     I           myTime, myIter, myThid )
+#endif
+       ELSE
+        WRITE(errorMessageUnit,*)
+     &    'tracer identity =', trIdentity, ' is not valid => STOP'
+        STOP 'ABNORMAL END: S/R GAD_CALC_RHS: invalid tracer identity'
+       ENDIF
+C-       DO j=1-OLy,sNy+OLy
+C-        DO i=1-OLx,sNx+OLx
+C-         fVerT(i,j,kUp) = fVerT(i,j,kUp)
+C-     &                  + df(i,j)*maskUp(i,j)*rhoFacF(k)
+C-        ENDDO
+C-       ENDDO
+#ifdef ALLOW_DIAGNOSTICS
+C-    Diagnostics of Non-Local Tracer (vertical) flux
+       IF ( useDiagnostics ) THEN
+         diagName = 'KPPg'//diagSufx
+         CALL DIAGNOSTICS_FILL( df, diagName, k,1, 2,bi,bj, myThid )
+C- note: needs to explicitly increment the counter since DIAGNOSTICS_FILL
+C        does it only if k=1 (never the case here)
+         IF ( k.EQ.2 ) CALL DIAGNOSTICS_COUNT(diagName,bi,bj,myThid)
+#ifdef ALLOW_LAYERS
+         IF ( useLayers ) THEN
+          CALL LAYERS_FILL(df,trIdentity,'DFR',k,1,2,bi,bj,myThid)
+         ENDIF
+#endif /* ALLOW_LAYERS */
+       ENDIF
+#endif
+      ENDIF
+#endif /* ALLOW_KPP */
 
 #ifdef GAD_SMOLARKIEWICZ_HACK
 coj   Hack to make redi (and everything else in this s/r) positive
@@ -535,12 +747,49 @@ coj   If tracer is already negative, scale flux to zero
            IF (-fVerT(i,j,kUp)*rkSign .GT.0. _d 0)
      &       fVerT(i,j,kUp)=gTrFac*fVerT(i,j,kUp)
 
+           IF (k.LT.Nr .AND. fVerT(i,j,kDown)*rkSign.GT.0. _d 0) THEN
+coj   Down flux is special: it has already been applied in lower layer,
+coj   so we have to readjust this.
+coj   undo down flux, ...
+             gTracer(i,j,k+1) = gTracer(i,j,k+1)
+     &        +_recip_hFacC(i,j,k+1,bi,bj)*recip_drF(k+1)
+     &         *recip_rA(i,j,bi,bj)*recip_deepFac2C(k+1)
+     &         *recip_rhoFacC(k+1)
+     &         *( -fVerT(i,j,kDown)*rkSign )
+coj   ... scale ...
+             fVerT(i,j,kDown)=gTrFac*fVerT(i,j,kDown)
+coj   ... and reapply
+             gTracer(i,j,k+1) = gTracer(i,j,k+1)
+     &        +_recip_hFacC(i,j,k+1,bi,bj)*recip_drF(k+1)
+     &         *recip_rA(i,j,bi,bj)*recip_deepFac2C(k+1)
+     &         *recip_rhoFacC(k+1)
+     &         *( fVerT(i,j,kDown)*rkSign )
+           ENDIF
+
          ENDIF
         ENDDO
        ENDDO
       ENDIF
 #endif /* GAD_SMOLARKIEWICZ_HACK */
 
+C--   Divergence of fluxes
+C     Anelastic: scale vertical fluxes by rhoFac and leave Horizontal fluxes unchanged
+C     for Stevens OBC: keep only vertical diffusive contribution on boundaries
+      DO j=1-OLy,sNy+OLy-1
+       DO i=1-OLx,sNx+OLx-1
+        gTracer(i,j,k) = gTracer(i,j,k)
+     &   -_recip_hFacC(i,j,k,bi,bj)*recip_drF(k)
+     &   *recip_rA(i,j,bi,bj)*recip_deepFac2C(k)*recip_rhoFacC(k)
+     &   *( (fZon(i+1,j)-fZon(i,j))*maskInC(i,j,bi,bj)
+     &     +(fMer(i,j+1)-fMer(i,j))*maskInC(i,j,bi,bj)
+     &     +(fVerT(i,j,kDown)-fVerT(i,j,kUp))*rkSign
+     &     -localT(i,j)*( (uTrans(i+1,j)-uTrans(i,j))*advFac
+     &                   +(vTrans(i,j+1)-vTrans(i,j))*advFac
+     &                   +(rTransKp1(i,j)-rTrans(i,j))*rAdvFac
+     &                  )*maskInC(i,j,bi,bj)
+     &    )
+       ENDDO
+      ENDDO
 
 #ifdef ALLOW_DEBUG
       IF ( debugLevel .GE. debLevC
