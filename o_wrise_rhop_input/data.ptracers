@@ -14,8 +14,8 @@
 # PTRACERS_dumpFreq = 648000.0,
 #  # every 30 day
 #  PTRACERS_dumpFreq = 2592000.0,
-#  # every 60 day
-   PTRACERS_dumpFreq = 5184000.0,
+#  # every 91.3125 days
+PTRACERS_dumpFreq = 7889400,
 
 #
 PTRACERS_advScheme(1) = 77,
