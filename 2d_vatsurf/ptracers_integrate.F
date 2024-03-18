@@ -10,7 +10,7 @@ C ==================
 C Modification by Alan 18,Jan,2024
 C previously this routine calculates advective flux with ufld,vfld,wfld
 C wPart = 0
-C to make the model Fld
+C to make the model 2D
 C ==================
 
 C !INTERFACE: ==========================================================
@@ -109,8 +109,8 @@ C  L_fric           :: Frictional length scale
       _RL L_fric
       _RL wRise (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL wPart (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
-      _RL uFld (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
-      _RL vFld (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+      _RL u2d (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
+      _RL v2d (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
 
       INTEGER iTracer
       INTEGER iMin,iMax,jMin,jMax
@@ -190,7 +190,7 @@ C-    Initialise tracer tendency to zero
         L_fric = 1.0D-6
 
 C     Set vertical velocity to be zero
-C     uFld, vFld :: horizontal velocities
+C     u2d, v2d :: horizontal velocities
 C               extrapolated to the surface
         DO k=1,Nr
          DO j=1-OLy,sNy+OLy
@@ -198,6 +198,12 @@ C               extrapolated to the surface
            IF (maskC(i,j,k,bi,bj).NE.0.) THEN
 C            wPart(i,j,k) = wFld(i,j,k)
             wPart(i,j,k) = 0. _d 0
+            u2d(i,j,1) = uFld(i,j,1) 
+     &       + ustress(i,j,bi,bj) / viscAhD
+     &       * drF(k) * hFacC(i,j,k,bi,bj) / twoRL
+            v2d(i,j,1) = vFld(i,j,1) 
+     &       + vstress(i,j,bi,bj) / viscAhD
+     &       * drF(k) * hFacC(i,j,k,bi,bj) / twoRL
            ENDIF
           ENDDO
          ENDDO
@@ -280,7 +286,7 @@ CADJ &      = comlev1_bibj_ptracers, key=ikey, byte=isbyte
      I                        PTRACERS_advScheme(iTracer),
      I                        PTRACERS_advScheme(iTracer),
      I                        GAD_TR,
-     I                        PTRACERS_dTLev, uFld, vFld, wPart,
+     I                        PTRACERS_dTLev, u2d, v2d, wPart,
      I                        pTracer(1-OLx,1-OLy,1,1,1,iTracer),
      U                        _Ptracers_som(:,:,:,:,:,:,iTracer),
      O                        gTracer,
@@ -297,7 +303,7 @@ CADJ &      = comlev1_bibj_ptracers, key=ikey, byte=isbyte
      I                        PTRACERS_advScheme(iTracer),
      I                        PTRACERS_advScheme(iTracer),
      I                        GAD_TR,
-     I                        PTRACERS_dTLev, uFld, vFld, wPart,
+     I                        PTRACERS_dTLev, u2d, v2d, wPart,
      I                        pTracer(1-OLx,1-OLy,1,1,1,iTracer),
      O                        gTracer,
      I                        bi, bj, myTime, myIter, myThid )
@@ -326,7 +332,7 @@ CADJ STORE gpTrNm1(:,:,k,bi,bj,iTracer) = comlev1_bibj_k_ptracers,
 CADJ &     key = kkey, kind = isbyte
 #endif /* ALLOW_AUTODIFF_TAMC */
           CALL CALC_ADV_FLOW(
-     I                uFld, vFld, wPart,
+     I                u2d, v2d, wPart,
      U                rTrans,
      O                uTrans, vTrans, rTransKp,
      O                maskUp, xA, yA,
@@ -354,8 +360,8 @@ C-    Calculate active tracer tendencies (gTracer) due to internal processes
 C      (advection, [explicit] diffusion, parameterizations,...)
           CALL GAD_CALC_RHS_2DPTR(
      I             bi,bj, iMin,iMax,jMin,jMax, k,kM1, kUp,kDown,
-     I             xA, yA, maskUp, uFld(1-OLx,1-OLy,k),
-     I             vFld(1-OLx,1-OLy,k), wPart(1-OLx,1-OLy,k),
+     I             xA, yA, maskUp, u2d(1-OLx,1-OLy,k),
+     I             v2d(1-OLx,1-OLy,k), wPart(1-OLx,1-OLy,k),
      I             uTrans, vTrans, rTrans, rTransKp,
      I             PTRACERS_diffKh(iTracer),
      I             PTRACERS_diffK4(iTracer),

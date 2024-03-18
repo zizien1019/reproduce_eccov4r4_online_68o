@@ -10,7 +10,7 @@ gad_c4_adv_r.f
 gad_c4_adv_x.f
 gad_c4_adv_y.f
 gad_calc_rhs.f
-gad_calc_rhs_2Dptr.f
+gad_calc_rhs_2dptr.f
 gad_del2.f
 gad_diff_r.f
 gad_diff_x.f

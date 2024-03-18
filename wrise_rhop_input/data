@@ -53,20 +53,20 @@
 # Time stepping parameters
  &PARM03
  nIter0=1,
- nTimeSteps=180000,
+ nTimeSteps=100000,
 
  deltaTmom=3600.,
  deltaTtracer=3600.,
  deltaTfreesurf=3600.,
- cAdjFreq=3600.,
+#  cAdjFreq=3600.,
  
  abEps = 0.1,
  forcing_In_AB=.FALSE.,
  momDissip_In_AB=.FALSE.,
- pchkptFreq   = 10800.0,
- dumpfreq = 3600.,
- monitorFreq = 900.0,
- dumpInitAndLast=.FALSE.,
+ pchkptFreq   = 31536000.0,
+ dumpfreq = 31536000.0,
+ monitorFreq = 31536000.0,
+ dumpInitAndLast=.TRUE.,
  /
 
 # Gridding parameters

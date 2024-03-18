@@ -203,6 +203,9 @@ C--   Set diagnostic suffix for the current tracer
         fZon(i,j)      = 0. _d 0
         fMer(i,j)      = 0. _d 0
         fVerT(i,j,kUp) = 0. _d 0
+C-    this line by Alan
+        fVerT(i,j,kDown) = 0. _d 0
+C-    end
         df(i,j)        = 0. _d 0
         df4(i,j)       = 0. _d 0
        ENDDO
