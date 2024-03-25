@@ -199,10 +199,10 @@ C               extrapolated to the surface
 C            wPart(i,j,k) = wFld(i,j,k)
             wPart(i,j,k) = 0. _d 0
             u2d(i,j,1) = uFld(i,j,1) 
-     &       + ustress(i,j,bi,bj) / viscAhD
+     &       + ustress(i,j,bi,bj) / viscAhD / rhoConst
      &       * drF(k) * hFacC(i,j,k,bi,bj) / twoRL
             v2d(i,j,1) = vFld(i,j,1) 
-     &       + vstress(i,j,bi,bj) / viscAhD
+     &       + vstress(i,j,bi,bj) / viscAhD / rhoConst
      &       * drF(k) * hFacC(i,j,k,bi,bj) / twoRL
            ENDIF
           ENDDO

@@ -6,13 +6,6 @@
 CBOP
 C !ROUTINE: PTRACERS_INTEGRATE
 
-C ==================
-C Modification by Alan 18,Jan,2024
-C previously this routine calculates advective flux with ufld,vfld,wfld
-C wPart = 0
-C to make the model Fld
-C ==================
-
 C !INTERFACE: ==========================================================
       SUBROUTINE PTRACERS_INTEGRATE(
      I                    bi, bj, recip_hFac,
@@ -31,9 +24,6 @@ C !USES: ===============================================================
 #include "SIZE.h"
 #include "EEPARAMS.h"
 #include "PARAMS.h"
-#include "DYNVARS.h"
-#include "EXF_FIELDS.h"
-#include "MOM_VISC.h"
 #include "GRID.h"
 #ifdef ALLOW_LONGSTEP
 #include "LONGSTEP_PARAMS.h"
@@ -55,7 +45,6 @@ C  KappaRk          :: vertical diffusion used for one passive tracer
 C  myTime           :: model time
 C  myIter           :: time-step number
 C  myThid           :: thread number
-
       INTEGER bi, bj
       _RS recip_hFac(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
       _RL uFld      (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
@@ -100,18 +89,6 @@ C  gTracer          :: passive tracer tendency
 C  gTrForc          :: passive tracer forcing tendency
 C  gTr_AB           :: Adams-Bashforth tracer tendency increment
 C  gTr_trp          :: passive tracer total transport tendency before gchem
-
-C  rhoK             :: Density at level k
-C  wRise            :: Rising velocity field
-C  wPart            :: = wfld + wRise
-C  L_fric           :: Frictional length scale
-      _RL rhoK  (1-OLx:sNx+OLx,1-OLy:sNy+OLy)
-      _RL L_fric
-      _RL wRise (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
-      _RL wPart (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
-      _RL uFld (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
-      _RL vFld (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr)
-
       INTEGER iTracer
       INTEGER iMin,iMax,jMin,jMax
       INTEGER i, j, k
@@ -183,22 +160,6 @@ C-    Initialise tracer tendency to zero
          DO j=1-OLy,sNy+OLy
           DO i=1-OLx,sNx+OLx
            gTracer(i,j,k) = 0. _d 0
-          ENDDO
-         ENDDO
-        ENDDO
-
-        L_fric = 1.0D-6
-
-C     Set vertical velocity to be zero
-C     uFld, vFld :: horizontal velocities
-C               extrapolated to the surface
-        DO k=1,Nr
-         DO j=1-OLy,sNy+OLy
-          DO i=1-OLx,sNx+OLx
-           IF (maskC(i,j,k,bi,bj).NE.0.) THEN
-C            wPart(i,j,k) = wFld(i,j,k)
-            wPart(i,j,k) = 0. _d 0
-           ENDIF
           ENDDO
          ENDDO
         ENDDO
@@ -280,7 +241,7 @@ CADJ &      = comlev1_bibj_ptracers, key=ikey, byte=isbyte
      I                        PTRACERS_advScheme(iTracer),
      I                        PTRACERS_advScheme(iTracer),
      I                        GAD_TR,
-     I                        PTRACERS_dTLev, uFld, vFld, wPart,
+     I                        PTRACERS_dTLev, uFld, vFld, wFld,
      I                        pTracer(1-OLx,1-OLy,1,1,1,iTracer),
      U                        _Ptracers_som(:,:,:,:,:,:,iTracer),
      O                        gTracer,
@@ -297,7 +258,7 @@ CADJ &      = comlev1_bibj_ptracers, key=ikey, byte=isbyte
      I                        PTRACERS_advScheme(iTracer),
      I                        PTRACERS_advScheme(iTracer),
      I                        GAD_TR,
-     I                        PTRACERS_dTLev, uFld, vFld, wPart,
+     I                        PTRACERS_dTLev, uFld, vFld, wFld,
      I                        pTracer(1-OLx,1-OLy,1,1,1,iTracer),
      O                        gTracer,
      I                        bi, bj, myTime, myIter, myThid )
@@ -307,8 +268,7 @@ CADJ &      = comlev1_bibj_ptracers, key=ikey, byte=isbyte
 C-    Start vertical index (k) loop (Nr:1)
         calcAdvection = .NOT.PTRACERS_MultiDimAdv(iTracer)
      &                  .AND. (PTRACERS_advScheme(iTracer).NE.0)
-C        DO k=Nr,1,-1
-        DO k=1,1,1
+        DO k=Nr,1,-1
 #ifdef ALLOW_AUTODIFF_TAMC
           kkey = k + (ikey-1)*Nr
 #endif /* ALLOW_AUTODIFF_TAMC */
@@ -326,7 +286,7 @@ CADJ STORE gpTrNm1(:,:,k,bi,bj,iTracer) = comlev1_bibj_k_ptracers,
 CADJ &     key = kkey, kind = isbyte
 #endif /* ALLOW_AUTODIFF_TAMC */
           CALL CALC_ADV_FLOW(
-     I                uFld, vFld, wPart,
+     I                uFld, vFld, wFld,
      U                rTrans,
      O                uTrans, vTrans, rTransKp,
      O                maskUp, xA, yA,
@@ -355,7 +315,7 @@ C      (advection, [explicit] diffusion, parameterizations,...)
           CALL GAD_CALC_RHS_2DPTR(
      I             bi,bj, iMin,iMax,jMin,jMax, k,kM1, kUp,kDown,
      I             xA, yA, maskUp, uFld(1-OLx,1-OLy,k),
-     I             vFld(1-OLx,1-OLy,k), wPart(1-OLx,1-OLy,k),
+     I             vFld(1-OLx,1-OLy,k), wFld(1-OLx,1-OLy,k),
      I             uTrans, vTrans, rTrans, rTransKp,
      I             PTRACERS_diffKh(iTracer),
      I             PTRACERS_diffK4(iTracer),
@@ -464,15 +424,6 @@ CADJ STORE recip_hfac = comlev1_bibj, key = tkey, kind = isbyte
         ENDIF
 #endif /* ALLOW_DOWN_SLOPE */
 
-C-    Force non-surface tracer tendency to zero
-C-        DO k=2,Nr
-C-        DO j=1-OLy,sNy+OLy
-C-         DO i=1-OLx,sNx+OLx
-C-          gTracer(i,j,k) = 0. _d 0
-C-         ENDDO
-C-        ENDDO
-C-       ENDDO
-
 C-    Integrate forward in time, storing in gTracer:  gTr <= pTr + dt*gTr
         CALL TIMESTEP_TRACER(
      I                bi, bj, PTRACERS_dTLev,
@@ -494,8 +445,33 @@ C       tracer field for implicit matrix calculation
 #endif /* ALLOW_MATRIX */
 
 C--   Vertical advection & diffusion (implicit) for passive tracers
-C--   --- deleted
 
+#ifdef ALLOW_AUTODIFF_TAMC
+CADJ STORE gTracer(:,:,:) = comlev1_bibj_ptracers, key=ikey, byte=isbyte
+#endif /* ALLOW_AUTODIFF_TAMC */
+
+#ifdef INCLUDE_IMPLVERTADV_CODE
+        IF ( PTRACERS_ImplVertAdv(iTracer) .OR. implicitDiffusion ) THEN
+C      to recover older (prior to 2016-10-05) results:
+c       IF ( PTRACERS_ImplVertAdv(iTracer) ) THEN
+          CALL GAD_IMPLICIT_R(
+     I         PTRACERS_ImplVertAdv(iTracer),
+     I         PTRACERS_advScheme(iTracer), GAD_TR,
+     I         PTRACERS_dTLev, kappaRk, recip_hFac, wFld,
+     I         pTracer(1-OLx,1-OLy,1,bi,bj,iTracer),
+     U         gTracer,
+     I         bi, bj, myTime, myIter, myThid )
+
+        ELSEIF ( implicitDiffusion ) THEN
+#else /* INCLUDE_IMPLVERTADV_CODE */
+        IF ( implicitDiffusion ) THEN
+#endif /* INCLUDE_IMPLVERTADV_CODE */
+          CALL IMPLDIFF(
+     I         bi, bj, iMin, iMax, jMin, jMax,
+     I         GAD_TR, kappaRk, recip_hFac,
+     U         gTracer,
+     I         myThid )
+        ENDIF
 
 #ifdef ALLOW_DIAGNOSTICS
         IF ( diagTrp_tend ) THEN
@@ -538,14 +514,13 @@ C-       collect all tracer back to surface -> no vertical motion
           DO i=1-OLx,sNx+OLx
            IF ((maskC(i,j,k,bi,bj) .NE. zeroRS) .AND.
      &     (pTracer(i,j,k,bi,bj,iTracer) .NE. zeroRL)) THEN
-            pTracer(i,j,1,bi,bj,iTracer) 
+             pTracer(i,j,1,bi,bj,iTracer) 
      &        = pTracer(i,j,1,bi,bj,iTracer) 
      &        + pTracer(i,j,k,bi,bj,iTracer) 
      &        * drF(k) * hFacC(i,j,k,bi,bj)
      &        * recip_drF(1) * recip_hFacC(i,j,1,bi,bj)
             pTracer(i,j,k,bi,bj,iTracer)  = 0. _d 0
            ENDIF
-
           ENDDO
          ENDDO
         ENDDO

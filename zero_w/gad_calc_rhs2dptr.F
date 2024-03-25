@@ -7,7 +7,7 @@ CBOP
 C !ROUTINE: GAD_CALC_RHS
 
 C !INTERFACE: ==========================================================
-      SUBROUTINE GAD_CALC_RHS(
+      SUBROUTINE GAD_CALC_RHS_2DPTR(
      I           bi,bj,iMin,iMax,jMin,jMax,k,kM1,kUp,kDown,
      I           xA, yA, maskUp, uFld, vFld, wFld,
      I           uTrans, vTrans, rTrans, rTransKp1,
@@ -772,6 +772,10 @@ coj   ... and reapply
 C--   Divergence of fluxes
 C     Anelastic: scale vertical fluxes by rhoFac and leave Horizontal fluxes unchanged
 C     for Stevens OBC: keep only vertical diffusive contribution on boundaries
+
+C-    a different equation to solve for 2d model
+C-    keep only divergence of horizontal fluxes
+
       DO j=1-OLy,sNy+OLy-1
        DO i=1-OLx,sNx+OLx-1
         gTracer(i,j,k) = gTracer(i,j,k)
@@ -779,11 +783,6 @@ C     for Stevens OBC: keep only vertical diffusive contribution on boundaries
      &   *recip_rA(i,j,bi,bj)*recip_deepFac2C(k)*recip_rhoFacC(k)
      &   *( (fZon(i+1,j)-fZon(i,j))*maskInC(i,j,bi,bj)
      &     +(fMer(i,j+1)-fMer(i,j))*maskInC(i,j,bi,bj)
-     &     +(fVerT(i,j,kDown)-fVerT(i,j,kUp))*rkSign
-     &     -localT(i,j)*( (uTrans(i+1,j)-uTrans(i,j))*advFac
-     &                   +(vTrans(i,j+1)-vTrans(i,j))*advFac
-     &                   +(rTransKp1(i,j)-rTrans(i,j))*rAdvFac
-     &                  )*maskInC(i,j,bi,bj)
      &    )
        ENDDO
       ENDDO
