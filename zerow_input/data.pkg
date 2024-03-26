@@ -17,7 +17,7 @@
  usePtracers=.TRUE.,
  useGCHEM=.TRUE.,
  useGMRedi= .TRUE.,
- useGGL90=.TRUE.,
+ useGGL90=.FALSE.,
  useSALT_PlUME=.TRUE.,
  useCAL   = .TRUE.,
  useSeaice= .FALSE.,
