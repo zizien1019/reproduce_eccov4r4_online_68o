@@ -25,7 +25,7 @@ export LC_ALL=en_US.utf8
 # # # Step 1 : build
 # module purge
 # module load intel impi
-# cd /scratch/yulinpan_root/yulinpan98/zizien/WORKDIR/ecco_v4r4/build
+# cd /scratch/yulinpan_root/yulinpan98/zizien/ecco_v4r4/build
 # make CLEAN
 # # # for 2d case
 # ../../MITgcm/tools/genmake2 -mods=../*68o/zero_w -rd=../../MITgcm -optfile=../*68o/linux_amd64_ifort+impi -mpi
@@ -46,24 +46,24 @@ module load netcdf-fortran
 unset I_MPI_PMI_LIBRARY
 export I_MPI_JOB_RESPECT_PROCESS_PLACEMENT=0
 
-cd /scratch/yulinpan_root/yulinpan98/zizien/WORKDIR/ecco_v4r4/run
-# rm -rf /scratch/yulinpan_root/yulinpan98/zizien/WORKDIR/ecco_v4r4/run/*
+cd /scratch/yulinpan_root/yulinpan98/zizien/ecco_v4r4/run
+# rm -rf /scratch/yulinpan_root/yulinpan98/zizien/ecco_v4r4/run/*
 
-# ln -s /scratch/yulinpan_root/yulinpan98/zizien/WORKDIR/forcing/input_init/error_weight/data_error/* .
-# ln -s /scratch/yulinpan_root/yulinpan98/zizien/WORKDIR/forcing/input_init/* .
-# ln -s /scratch/yulinpan_root/yulinpan98/zizien/WORKDIR/forcing/input_forcing/* .
-# ln -s /scratch/yulinpan_root/yulinpan98/zizien/WORKDIR/forcing/other/flux-forced/state_weekly/* .
-# ln -s /scratch/yulinpan_root/yulinpan98/zizien/WORKDIR/forcing/other/flux-forced/forcing/* .
-# ln -s /scratch/yulinpan_root/yulinpan98/zizien/WORKDIR/forcing/other/flux-forced/forcing_weekly/* .
-# ln -s /scratch/yulinpan_root/yulinpan98/zizien/WORKDIR/forcing/other/flux-forced/mask/* .
-# ln -s /scratch/yulinpan_root/yulinpan98/zizien/WORKDIR/forcing/other/flux-forced/xx/* .
-# ln -s /scratch/yulinpan_root/yulinpan98/zizien/WORKDIR/gcmfaces_climatologies/*.bin .
-# ln -s /scratch/yulinpan_root/yulinpan98/zizien/WORKDIR/TRC_init/* .
+# ln -s /scratch/yulinpan_root/yulinpan98/zizien/forcing/input_init/error_weight/data_error/* .
+# ln -s /scratch/yulinpan_root/yulinpan98/zizien/forcing/input_init/* .
+# ln -s /scratch/yulinpan_root/yulinpan98/zizien/forcing/input_forcing/* .
+# ln -s /scratch/yulinpan_root/yulinpan98/zizien/forcing/other/flux-forced/state_weekly/* .
+# ln -s /scratch/yulinpan_root/yulinpan98/zizien/forcing/other/flux-forced/forcing/* .
+# ln -s /scratch/yulinpan_root/yulinpan98/zizien/forcing/other/flux-forced/forcing_weekly/* .
+# ln -s /scratch/yulinpan_root/yulinpan98/zizien/forcing/other/flux-forced/mask/* .
+# ln -s /scratch/yulinpan_root/yulinpan98/zizien/forcing/other/flux-forced/xx/* .
+# ln -s /scratch/yulinpan_root/yulinpan98/zizien/gcmfaces_climatologies/*.bin .
+# ln -s /scratch/yulinpan_root/yulinpan98/zizien/ic_files/* .
 
 # most important :: specify input files
-# ln -s /scratch/yulinpan_root/yulinpan98/zizien/WORKDIR/ecco_v4r4/reproduce_eccov4r4_online_68o/frag_input/* .
-ln -s /scratch/yulinpan_root/yulinpan98/zizien/WORKDIR/ecco_v4r4/reproduce_eccov4r4_online_68o/zerow_input/* .
-# ln -s /scratch/yulinpan_root/yulinpan98/zizien/WORKDIR/ecco_v4r4/reproduce_eccov4r4_online_68o/wrise_rhop_input/* .
+# ln -s /scratch/yulinpan_root/yulinpan98/zizien/ecco_v4r4/reproduce_eccov4r4_online_68o/frag_input/* .
+ln -s /scratch/yulinpan_root/yulinpan98/zizien/ecco_v4r4/reproduce_eccov4r4_online_68o/zerow_input/* .
+# ln -s /scratch/yulinpan_root/yulinpan98/zizien/ecco_v4r4/reproduce_eccov4r4_online_68o/wrise_rhop_input/* .
 
 cp -p ../build/mitgcmuv .
 mpiexec -np 96 ./mitgcmuv > a.log
