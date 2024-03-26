@@ -1,0 +1,25 @@
+# in case things get deleted again:
+cd /scratch/yulinpan_root/yulinpan98/zizien/WORKDIR
+
+# reinstall MITgcm
+
+rm -rf MITgcm
+git clone https://github.com/MITgcm/MITgcm.git
+cd MITgcm
+git checkout checkpoint68o
+
+# get necessary data:
+
+wget -P forcing -r --no-parent --user zizien1019 --ask-password -nH --cut-dirs=4 https://ecco.jpl.nasa.gov/drive/files/Version4/Release4/input_init
+
+wget -P forcing -r --no-parent --user zizien1019 --ask-password -nH --cut-dirs=4 https://ecco.jpl.nasa.gov/drive/files/Version4/Release4/other/flux-forced
+
+wget -P forcing -r --no-parent --user zizien1019 --ask-password -nH --cut-dirs=4 https://ecco.jpl.nasa.gov/drive/files/Version4/Release4/input_forcing
+
+wget https://zenodo.org/records/5101243/files/gcmfaces_climatologies.tar.gz
+mkdir gcmfaces_climatologies
+tar -xvzf gcmfaces_climatologies.tar.gz -C gcmfaces_climatologies
+
+# password:
+
+q9tUMm8a6GUf8ldBdiW
