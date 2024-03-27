@@ -1,16 +1,7 @@
 #!/bin/bash
-# The interpreter used to execute the script
-
-#SBATCH --job-name=MiPla
-#SBATCH --mail-user=zizien@umich.edu
-#SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --nodes=1
-#SBATCH --ntasks-per-node=96
-#SBATCH --cpus-per-task=1
-#SBATCH --mem-per-cpu=200m
-#SBATCH --time=10:00:00
-#SBATCH --account=yulinpan0
-#SBATCH --partition=standard
+#SBATCH -t 10:00:00         # total run time limit (HH:MM:SS)
+#SBATCH -n 96               # total number of tasks across all nodes (max=36)
+#SBATCH -A ees230007p       # charge ID
 
 export LANG=en_US.utf8
 export LC_ALL=en_US.utf8
@@ -23,10 +14,11 @@ export LC_ALL=en_US.utf8
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # %%%%%%%%%%%%%%%%%%%%%
 
-cd /scratch/yulinpan_root/yulinpan98/zizien/ecco_v4r4/build
+cd /ocean/projects/ees230007p/ztseng/ecco_v4r4/build
 
 module purge
-module load intel impi
+module load intel-icc
+module load intel-mpi
 make CLEAN
 
 # %%%%%%%%%%%%%%%%%%%%%
@@ -50,14 +42,14 @@ make -j96 all
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 module purge
-module load intel
-module load impi
+module load intel-icc
+module load intel-mpi
 module load hdf5
-module load netcdf-fortran
+module load parallel-netcdf
 unset I_MPI_PMI_LIBRARY
 export I_MPI_JOB_RESPECT_PROCESS_PLACEMENT=0
 
-cd /scratch/yulinpan_root/yulinpan98/zizien/ecco_v4r4/run
+cd /ocean/projects/ees230007p/ztseng/ecco_v4r4/run
 
 rm -rf ../run/*
 
@@ -92,6 +84,6 @@ mpiexec -np 96 ./mitgcmuv > a.log
 # %%%%%%%%%%%%%%%%%%%%%
 # # # S.0* T.0* U.0* V.0* W.0* PTR* ziens_stuvw
 
-mkdir ziens_S
-mv PTR* ziens_S
-mv ziens_S ..
+mkdir ziens_zerow_S
+mv PTR* ziens_zerow_S
+mv ziens_zerow_S ..
