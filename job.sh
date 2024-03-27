@@ -23,8 +23,8 @@ export LC_ALL=en_US.utf8
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # %%%%%%%%%%%%%%%%%%%%%
 
-cd /scratch/yulinpan_root/yulinpan98/zizien/ecco_v4r4/build
-# cd /ocean/projects/ees230007p/ztseng/ecco_v4r4/build
+# cd /scratch/yulinpan_root/yulinpan98/zizien/ecco_v4r4/build
+cd /ocean/projects/ees230007p/ztseng/ecco_v4r4/build
 
 module purge
 module load intel impi
