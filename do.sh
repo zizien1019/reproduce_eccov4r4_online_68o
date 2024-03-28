@@ -30,7 +30,7 @@ make CLEAN
 
 # ../../MITgcm/tools/genmake2 -mods=../*68o/wrise_rhop -rd=../../MITgcm -optfile=../*68o/linux_amd64_ifort+impi -mpi
 
-make -j96 depen
+make -j96 depend
 make -j96 all
 
 
