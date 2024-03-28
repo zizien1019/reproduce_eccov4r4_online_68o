@@ -63,7 +63,7 @@ ln -s ../../forcing/other/flux-forced/forcing_weekly/* .
 ln -s ../../forcing/other/flux-forced/mask/* .
 ln -s ../../forcing/other/flux-forced/xx/* .
 ln -s ../../gcmfaces_climatologies/*.bin .
-ln -s ../../reproduce_eccov4r4_online_68o/ic_files/* .
+ln -s ../reproduce_eccov4r4_online_68o/ic_files/* .
 
 # %%%%%%%%%%%%%%%%%%%%%
 # # # most important :: specify input files :: choose one
