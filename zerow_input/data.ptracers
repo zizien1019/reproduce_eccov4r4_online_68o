@@ -27,8 +27,8 @@ PTRACERS_useGMRedi(1)=.FALSE.,
 # PTRACERS_diffKr(1) = 0.,
 # PTRACERS_initialFile(1) = 'source2010_coast.bin',
 # PTRACERS_initialFile(1) = 'surfc.bin',
-# PTRACERS_initialFile(1) = 'TRC_init_surf_constant.bin',
-PTRACERS_initialFile(1) = '',
+PTRACERS_initialFile(1) = 'TRC_init_surf_constant.bin',
+# PTRACERS_initialFile(1) = '',
 
 # 
 # PTRACERS_ref(1,1)=0.,

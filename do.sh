@@ -84,6 +84,6 @@ mpiexec -np 96 ./mitgcmuv > a.log
 # %%%%%%%%%%%%%%%%%%%%%
 # # # S.0* T.0* U.0* V.0* W.0* PTR* ziens_stuvw
 
-mkdir ziens_zerow_S
-mv PTR* ziens_zerow_S
-mv ziens_zerow_S ..
+mkdir ziens_zerow_C
+mv PTR* ziens_zerow_C
+mv ziens_zerow_C ..
