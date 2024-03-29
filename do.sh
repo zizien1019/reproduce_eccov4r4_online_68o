@@ -30,7 +30,7 @@ make CLEAN
 
 # ../../MITgcm/tools/genmake2 -mods=../*68o/wrise_rhop -rd=../../MITgcm -optfile=../*68o/linux_amd64_ifort+impi -mpi
 
-make -j96 depen
+make -j96 depend
 make -j96 all
 
 
@@ -63,7 +63,7 @@ ln -s ../../forcing/other/flux-forced/forcing_weekly/* .
 ln -s ../../forcing/other/flux-forced/mask/* .
 ln -s ../../forcing/other/flux-forced/xx/* .
 ln -s ../../gcmfaces_climatologies/*.bin .
-ln -s ../../reproduce_eccov4r4_online_68o/ic_files/* .
+ln -s ../reproduce_eccov4r4_online_68o/ic_files/* .
 
 # %%%%%%%%%%%%%%%%%%%%%
 # # # most important :: specify input files :: choose one
