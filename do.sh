@@ -85,6 +85,6 @@ mpiexec -np 96 ./mitgcmuv > a.log
 # %%%%%%%%%%%%%%%%%%%%%
 # # # S.0* T.0* U.0* V.0* W.0* PTR* ziens_stuvw
 
-mkdir ziens_xvertdiff_S
-mv PTR* ziens_xvertdiff_S
-mv ziens_xvertdiff_S ..
+mkdir ziens_xvertdiff_C
+mv PTR* ziens_xvertdiff_C
+mv ziens_xvertdiff_C ..
