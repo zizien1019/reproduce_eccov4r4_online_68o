@@ -24,7 +24,7 @@ make CLEAN
 # %%%%%%%%%%%%%%%%%%%%%
 # # # for 2d case
 
-../../MITgcm/tools/genmake2 -mods=../reproduce_eccov4r4_online_68o/zero_w -rd=../../MITgcm -optfile=../reproduce_eccov4r4_online_68o/linux_amd64_ifort+impi -mpi
+../../MITgcm/tools/genmake2 -mods=../reproduce_eccov4r4_online_68o/x_vert_diff -rd=../../MITgcm -optfile=../reproduce_eccov4r4_online_68o/linux_amd64_ifort+impi -mpi
 
 # # # for 3d case
 
@@ -68,7 +68,8 @@ ln -s ../reproduce_eccov4r4_online_68o/ic_files/* .
 # %%%%%%%%%%%%%%%%%%%%%
 # # # most important :: specify input files :: choose one
 
-ln -s ../reproduce_eccov4r4_online_68o/zerow_input/* .
+ln -s ../reproduce_eccov4r4_online_68o/x_vert_diff_input/* .
+# ln -s ../reproduce_eccov4r4_online_68o/zerow_input/* .
 # ln -s ../reproduce_eccov4r4_online_68o/wrise_rhop_input/* .
 
 cp -p ../build/mitgcmuv .
@@ -84,6 +85,6 @@ mpiexec -np 96 ./mitgcmuv > a.log
 # %%%%%%%%%%%%%%%%%%%%%
 # # # S.0* T.0* U.0* V.0* W.0* PTR* ziens_stuvw
 
-mkdir ziens_zerow_C
-mv PTR* ziens_zerow_C
-mv ziens_zerow_C ..
+mkdir ziens_xvertdiff_S
+mv PTR* ziens_xvertdiff_S
+mv ziens_xvertdiff_S ..
