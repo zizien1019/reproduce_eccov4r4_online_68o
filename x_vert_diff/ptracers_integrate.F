@@ -509,21 +509,21 @@ C--   Update tracer fields:  pTr(n) = pTr**
         ENDIF
 
 C-       collect all tracer back to surface -> no vertical motion
-        DO k=2,Nr
-         DO j=1-OLy,sNy+OLy
-          DO i=1-OLx,sNx+OLx
-           IF ((maskC(i,j,k,bi,bj) .NE. zeroRS) .AND.
-     &     (pTracer(i,j,k,bi,bj,iTracer) .NE. zeroRL)) THEN
-             pTracer(i,j,1,bi,bj,iTracer) 
-     &        = pTracer(i,j,1,bi,bj,iTracer) 
-     &        + pTracer(i,j,k,bi,bj,iTracer) 
-     &        * drF(k) * hFacC(i,j,k,bi,bj)
-     &        * recip_drF(1) * recip_hFacC(i,j,1,bi,bj)
-            pTracer(i,j,k,bi,bj,iTracer)  = 0. _d 0
-           ENDIF
-          ENDDO
-         ENDDO
-        ENDDO
+C-        DO k=2,Nr
+C-         DO j=1-OLy,sNy+OLy
+C-          DO i=1-OLx,sNx+OLx
+C-           IF ((maskC(i,j,k,bi,bj) .NE. zeroRS) .AND.
+C-     &     (pTracer(i,j,k,bi,bj,iTracer) .NE. zeroRL)) THEN
+C-             pTracer(i,j,1,bi,bj,iTracer) 
+C-     &        = pTracer(i,j,1,bi,bj,iTracer) 
+C-     &        + pTracer(i,j,k,bi,bj,iTracer) 
+C-     &        * drF(k) * hFacC(i,j,k,bi,bj)
+C-     &        * recip_drF(1) * recip_hFacC(i,j,1,bi,bj)
+C-            pTracer(i,j,k,bi,bj,iTracer)  = 0. _d 0
+C-           ENDIF
+C-          ENDDO
+C-         ENDDO
+C-        ENDDO
 
 #ifdef ALLOW_OBCS
 C--   Apply open boundary conditions for each passive tracer
