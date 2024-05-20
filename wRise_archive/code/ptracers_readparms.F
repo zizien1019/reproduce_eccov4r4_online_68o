@@ -34,7 +34,7 @@ C     !LOCAL VARIABLES:
 C     k,iTracer  :: loop indices
 C     iUnit      :: unit number for I/O
 C     msgBuf     :: message buffer
-      INTEGER k, iTracer, jTracer
+      INTEGER k, iTracer
       INTEGER iUnit
       INTEGER ic
       CHARACTER*(MAX_LEN_MBUF) msgBuf
@@ -60,13 +60,8 @@ C     tauTr1ClimRelax :: old parameter (will be removed 1 day)
      &     PTRACERS_diffKr,
      &     PTRACERS_diffKrNr,
      &     PTRACERS_ref,
-
-     &     PTRACERS_wRise, 
      &     PTRACERS_rho_p,
-     &     PTRACERS_d_p,
-     &     PTRACERS_rFrag,
-
-
+     &     PTRACERS_wRise, 
      &     PTRACERS_EvPrRn,
      &     PTRACERS_useGMRedi,
      &     PTRACERS_useDWNSLP,
@@ -110,18 +105,11 @@ C     Set defaults values for parameters in PTRACERS.h
       PTRACERS_dumpFreq    = dumpFreq
       PTRACERS_taveFreq    = taveFreq
       PTRACERS_monitorFreq = monitorFreq
-      PTRACERS_Iter0    =  0
-      PTRACERS_numInUse = -1
-
+      PTRACERS_Iter0    = 0
+      PTRACERS_numInUse =-1
+      PTRACERS_wRise  = 0. _d 0
       DO iTracer=1,PTRACERS_num
-            
-        PTRACERS_wRise(iTracer)  = 0. _d 0
-        PTRACERS_rho_p(iTracer) = 0. _d 0
-        PTRACERS_d_p(iTracer) = 0. _d 0
-        DO jTracer=1,PTRACERS_num
-            PTRACERS_rFrag(iTracer,jTracer) = 0._d 0
-        ENDDO
-
+        PTRACERS_rho_p(iTracer) = rhoConst
         PTRACERS_startStepFwd(iTracer) = baseTime
         PTRACERS_resetFreq (iTracer) = 0.
         PTRACERS_resetPhase(iTracer) = 0.
