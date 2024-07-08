@@ -3,9 +3,10 @@
 # nTx - No. threads per process in X
 # nTy - No. threads per process in Y
  &EEPARMS
+ useCubedSphereExchange=.TRUE.,
  nTx=1,
  nTy=1,
- &
+ /
 # Note: Some systems use & as the
 # namelist terminator. Other systems
 # use a / character (as shown here).

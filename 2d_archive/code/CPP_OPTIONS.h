@@ -19,10 +19,10 @@ C-- Forcing code options:
 
 C o Shortwave heating as extra term in external_forcing.F
 C Note: this should be a run-time option
-#undef SHORTWAVE_HEATING
+#define SHORTWAVE_HEATING
 
 C o Include/exclude Geothermal Heat Flux at the bottom of the ocean
-#undef ALLOW_GEOTHERMAL_FLUX
+#define ALLOW_GEOTHERMAL_FLUX
 
 C o Allow to account for heating due to friction (and momentum dissipation)
 #undef ALLOW_FRICTION_HEATING
@@ -35,10 +35,10 @@ C o Include pressure loading code
 #define ATMOSPHERIC_LOADING
 
 C o Include/exclude balancing surface forcing fluxes code
-#undef ALLOW_BALANCE_FLUXES
+#define ALLOW_BALANCE_FLUXES
 
 C o Include/exclude balancing surface forcing relaxation code
-#undef ALLOW_BALANCE_RELAX
+#define ALLOW_BALANCE_RELAX
 
 C o Include/exclude checking for negative salinity
 #undef CHECK_SALINITY_FOR_NEGATIVE_VALUES
@@ -74,7 +74,7 @@ C o Include/exclude call to S/R CALC_DIFFUSIVITY
 #define INCLUDE_CALC_DIFFUSIVITY_CALL
 
 C o Allow full 3D specification of vertical diffusivity
-#undef ALLOW_3D_DIFFKR
+#define ALLOW_3D_DIFFKR
 
 C o Allow latitudinally varying BryanLewis79 vertical diffusivity
 #undef ALLOW_BL79_LAT_VARY
@@ -98,7 +98,7 @@ C o Include/exclude Implicit vertical advection code
 #define INCLUDE_IMPLVERTADV_CODE
 
 C o Include/exclude AdamsBashforth-3rd-Order code
-#undef ALLOW_ADAMSBASHFORTH_3
+#define ALLOW_ADAMSBASHFORTH_3
 
 C o Include/exclude Quasi-Hydrostatic Stagger Time-step AdamsBashforth code
 #undef ALLOW_QHYD_STAGGER_TS
@@ -114,7 +114,7 @@ C   this implies that grid-cell thickness (hFactors) varies with time
 #define NONLIN_FRSURF
 C o Disable code for rStar coordinate and/or code for Sigma coordinate
 c#define DISABLE_RSTAR_CODE
-c#define DISABLE_SIGMA_CODE
+#define DISABLE_SIGMA_CODE
 
 C o Include/exclude nonHydrostatic code
 #undef ALLOW_NONHYDROSTATIC
@@ -128,13 +128,13 @@ C o Include/exclude code for Non Self-Adjoint (NSA) conjugate-gradient solver
 #undef ALLOW_CG2D_NSA
 
 C o Include/exclude code for single reduction Conjugate-Gradient solver
-#define ALLOW_SRCG
+#undef ALLOW_SRCG
 
 C o Choices for implicit solver routines solve_*diagonal.F
 C   The following has low memory footprint, but not suitable for AD
 #undef SOLVE_DIAGONAL_LOWMEMORY
 C   The following one suitable for AD but does not vectorize
-#undef SOLVE_DIAGONAL_KINNER
+#define SOLVE_DIAGONAL_KINNER
 
 C   Implementation alternative (might be faster on some platforms ?)
 #undef USE_MASK_AND_NO_IF
