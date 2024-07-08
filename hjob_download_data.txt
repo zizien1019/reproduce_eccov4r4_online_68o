@@ -9,6 +9,7 @@ cd MITgcm
 git checkout checkpoint68o
 
 # get necessary data:
+
 # for offline run
 wget -P forcing -r --no-parent --user zizien1019 --ask-password -nH --cut-dirs=4 https://ecco.jpl.nasa.gov/drive/files/Version4/Release4/input_init
 wget -P forcing -r --no-parent --user zizien1019 --ask-password -nH --cut-dirs=4 https://ecco.jpl.nasa.gov/drive/files/Version4/Release4/other/flux-forced
@@ -18,9 +19,10 @@ mkdir gcmfaces_climatologies
 tar -xvzf gcmfaces_climatologies.tar.gz -C gcmfaces_climatologies
 
 # for online run
-wget -r --no-parent --user YOURUSERNAME --ask-password https://ecco.jpl.nasa.gov/drive/files/Version4/Release4/input_forcing
-wget -r --no-parent --user YOURUSERNAME --ask-password https://ecco.jpl.nasa.gov/drive/files/Version4/Release4/input_init
-wget -r --no-parent --user YOURUSERNAME --ask-password https://ecco.jpl.nasa.gov/drive/files/Version4/Release4/input_ecco
+# check https://ecco-group.org/docs/v4r4_reproduction_howto.pdf
+wget -P forcing -r --no-parent --user zizien1019 --ask-password -nH --cut-dirs=4 https://ecco.jpl.nasa.gov/drive/files/Version4/Release4/input_forcing
+wget -P forcing -r --no-parent --user zizien1019 --ask-password -nH --cut-dirs=4 https://ecco.jpl.nasa.gov/drive/files/Version4/Release4/input_init
+wget -P forcing -r --no-parent --user zizien1019 --ask-password -nH --cut-dirs=4 https://ecco.jpl.nasa.gov/drive/files/Version4/Release4/input_ecco
 
 # password:
 
