@@ -5,10 +5,10 @@
 #SBATCH --mail-user=zizien@umich.edu
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=96
+#SBATCH --ntasks-per-node=36
 #SBATCH --cpus-per-task=1
-#SBATCH --mem-per-cpu=200m
-#SBATCH --time=10:00:00
+#SBATCH --mem-per-cpu=3g
+#SBATCH --time=00:05:00
 #SBATCH --account=yulinpan0
 #SBATCH --partition=standard
 
@@ -23,23 +23,23 @@ export LC_ALL=en_US.utf8
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # %%%%%%%%%%%%%%%%%%%%%
 
-cd /scratch/yulinpan_root/yulinpan98/zizien/ecco_v4r4/build
+# cd /scratch/yulinpan_root/yulinpan98/zizien/ecco_v4r4/build
 
-module purge
-module load intel impi
-make CLEAN
+# module purge
+# module load intel impi
+# make CLEAN
 
-# %%%%%%%%%%%%%%%%%%%%%
-# # # for 2d case
+# # %%%%%%%%%%%%%%%%%%%%%
+# # # # for 2d case
 
-../../MITgcm/tools/genmake2 -mods=../reproduce_eccov4r4_online_68o/zero_w -rd=../../MITgcm -optfile=../reproduce_eccov4r4_online_68o/linux_amd64_ifort+impi -mpi
+# ../../MITgcm/tools/genmake2 -mods=../code -rd=../../MITgcm -optfile=../linux_amd64_ifort+impi -mpi
 
-# # # for 3d case
+# # # # for 3d case
 
-# ../../MITgcm/tools/genmake2 -mods=../*68o/wrise_rhop -rd=../../MITgcm -optfile=../*68o/linux_amd64_ifort+impi -mpi
+# # ../../MITgcm/tools/genmake2 -mods=../*68o/wrise_rhop -rd=../../MITgcm -optfile=../*68o/linux_amd64_ifort+impi -mpi
 
-make -j96 depen
-make -j96 all
+# make -j32 depend
+# make -j32 all
 
 
 
@@ -61,26 +61,23 @@ cd /scratch/yulinpan_root/yulinpan98/zizien/ecco_v4r4/run
 
 rm -rf ../run/*
 
-ln -s ../../forcing/input_init/error_weight/data_error/* .
+ln -s ../../forcing/input_init/error_weight/ctrl_weight/* .
 ln -s ../../forcing/input_init/error_weight/data_error/* .
 ln -s ../../forcing/input_init/* .
+
 ln -s ../../forcing/input_forcing/* .
-ln -s ../../forcing/other/flux-forced/state_weekly/* .
-ln -s ../../forcing/other/flux-forced/forcing/* .
-ln -s ../../forcing/other/flux-forced/forcing_weekly/* .
-ln -s ../../forcing/other/flux-forced/mask/* .
-ln -s ../../forcing/other/flux-forced/xx/* .
-ln -s ../../gcmfaces_climatologies/*.bin .
-ln -s ../../reproduce_eccov4r4_online_68o/ic_files/* .
+
+ln -s ../../forcing/input_ecco/input_other/* .
+
 
 # %%%%%%%%%%%%%%%%%%%%%
-# # # most important :: specify input files :: choose one
+# specify input files :: choose one
 
-ln -s ../reproduce_eccov4r4_online_68o/zerow_input/* .
-# ln -s ../reproduce_eccov4r4_online_68o/wrise_rhop_input/* .
+ln -s ../input/* .
 
 cp -p ../build/mitgcmuv .
-mpiexec -np 96 ./mitgcmuv > a.log
+
+mpiexec -np 32 ./mitgcmuv > a.log
 
 
 
