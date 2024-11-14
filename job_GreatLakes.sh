@@ -36,7 +36,7 @@ export LC_ALL=en_US.utf8
 
 # # # # for 3d case
 
-# # ../../MITgcm/tools/genmake2 -mods=../*68o/wrise_rhop -rd=../../MITgcm -optfile=../*68o/linux_amd64_ifort+impi -mpi
+# # ../../MITgcm/tools/genmake2 -mods=../code -rd=../../MITgcm -optfile=../linux_amd64_ifort+impi -mpi
 
 # make -j32 depend
 # make -j32 all
