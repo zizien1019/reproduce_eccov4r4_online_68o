@@ -23,23 +23,23 @@ export LC_ALL=en_US.utf8
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # %%%%%%%%%%%%%%%%%%%%%
 
-# cd /scratch/yulinpan_root/yulinpan98/zizien/ecco_v4r4/build
+cd /scratch/yulinpan_root/yulinpan98/zizien/ecco_v4r4/build
 
-# module purge
-# module load intel impi
-# make CLEAN
+module purge
+module load intel impi
+make CLEAN
 
-# # %%%%%%%%%%%%%%%%%%%%%
-# # # # for 2d case
+# %%%%%%%%%%%%%%%%%%%%%
+# # # for 2d case
+
+../../MITgcm/tools/genmake2 -mods=../code -rd=../../MITgcm -optfile=../linux_amd64_ifort+impi -mpi
+
+# # # for 3d case
 
 # ../../MITgcm/tools/genmake2 -mods=../code -rd=../../MITgcm -optfile=../linux_amd64_ifort+impi -mpi
 
-# # # # for 3d case
-
-# # ../../MITgcm/tools/genmake2 -mods=../code -rd=../../MITgcm -optfile=../linux_amd64_ifort+impi -mpi
-
-# make -j32 depend
-# make -j32 all
+make -j32 depend
+make -j32 all
 
 
 
