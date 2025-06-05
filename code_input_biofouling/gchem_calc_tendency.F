@@ -228,7 +228,7 @@ C     Only do for tracers used with biofouling
 ! C         % ambient algae concentration
             Inc(k) = I_mag(k) 
      &            * DCOS(2. * PI * myTime / 86400.)
-     &            * DCOS( abs(yC(i,j,bi,bj)) / 180. * PI )
+     &            * DCOS( yC(i,j,bi,bj) / 180. * PI )
             IF (Inc(k) .LT. 0) THEN
                   Inc(k) = 0.
             ENDIF
@@ -241,7 +241,7 @@ C     Only do for tracers used with biofouling
 ! C         % mu(Nr)     :: growth rate in (1/day)
 ! C         % phi(Nr)    :: temperature influence
             mu_opt(k) = 1.85 * Inc(k) / 86400. / 
-     &            (Inc(k) / 86400. + 1.85/0.12)
+     &            (Inc(k) / 86400. + 1.85 / 0.12)
 
             phi(k) = (theta(i,j,k,bi,bj)+tRef(k) - 33.3) 
      &            * (theta(i,j,k,bi,bj)+tRef(k) - 0.2)**2 / 26.5
