@@ -227,7 +227,7 @@ C     Only do for tracers used with biofouling
      &            (PTRACERS_d_p(jTr)/2. + r_A)**3
 ! C         % ambient algae concentration
             Inc(k) = I_mag(k) 
-     &            * DCOS(2. * PI * myTime / 86400.)
+     &            * DCOS( 2. * PI * DBLE(myTime) / 86400. )
      &            * DCOS( yC(i,j,bi,bj) / 180. * PI )
             IF (Inc(k) .LT. 0) THEN
                   Inc(k) = 0.
@@ -247,18 +247,19 @@ C     Only do for tracers used with biofouling
      &            * (theta(i,j,k,bi,bj)+tRef(k) - 0.2)**2 / 26.5
      &            / ( 26.5 * (theta(i,j,k,bi,bj)+tRef(k) - 26.7) 
      &            + 6.6 * (33.5 - 2. * (theta(i,j,k,bi,bj)+tRef(k))))
-            mu(k) = mu_opt(k) * phi(k)
             IF ( ((theta(i,j,k,bi,bj)+tRef(k)) .GT. 33.3) .OR.
      &           ((theta(i,j,k,bi,bj)+tRef(k)) .LT. 0.2 ) ) THEN
-                  mu(k) = 0.
+                  phi(k) = 0.
             ENDIF
+            mu(k) = mu_opt(k) * phi(k)
+            
 
             bio_dAdt(i,j,k,bi,bj,jTr) = 
      &       b_brown(k) * A_A(k) / (4. * PI * (PTRACERS_d_0/2.)**2)
      &       + mu(k) / 86400. * (jTr * 1. _d 0 - 2.) * PTRACERS_delA
      &       - 0.39 / 86400. * (jTr * 1. _d 0 - 2.) * PTRACERS_delA
-     &       - 2.**((theta(i,j,k,bi,bj)+tRef(k))/10. - 2) * 0.1 / 86400.
-     &       * (jTr * 1. _d 0 - 2.) * PTRACERS_delA
+     &       - 2. _d 0 **((theta(i,j,k,bi,bj)+tRef(k))/10. - 2.)
+     &       * 0.1 / 86400. * (jTr * 1. _d 0 - 2.) * PTRACERS_delA
 
            ENDDO
           ENDDO
@@ -285,7 +286,7 @@ C     Only do for tracers used with biofouling
 
             bio_flux(i,j,k,bi,bj,jTr) = 
      &   (bio_dAdt(i,j,k,bi,bj,jTr)+bio_dAdt(i,j,k,bi,bj,jTr+1))
-     &   * tr_projA / 2
+     &   * tr_projA / 2.
 
            ENDDO
           ENDDO
