@@ -13,11 +13,8 @@ nx = mod(wheremin, 90);
 
 %% 1. load tracer data
 
-% specify where tracer data are stored
-tracer_dir = '';
+tracer_dir = '/Users/zengzien/Code_Research/GreatLakes/small_26yrs/ptr_3d/';
 
-
-% try take February & September
 
 itr = [224110, 227760];
 ptr = rdmds([tracer_dir 'PTRtave01'], itr);
@@ -39,30 +36,16 @@ clear ptr ptr_temp
 xc_ecco(xc_ecco<0) = xc_ecco(xc_ecco<0) + 360;
 
 
-%% 2. load density to determine hb
 
-% directory containing the density anomoly files
-rho_dir = '';
+%% 2. load diagnostic hb
 
-rho = rdmds([rho_dir 'RHOAnoma_mon_mean'], [224244, 227904]);
+% directory containing the file
 
-MLD = zeros(90, 1170, 2);
+MXLD_dir = '/Users/zengzien/Code_Research/GreatLakes/20240906_corr/MXLDEPTH_monthly/';
 
-for t = 1 : 2
-    for i = 1 : 90
-        for j = 1 : 1170
+% Load Files
 
-            r = squeeze(rho(i,j,:,t));
-            drdz = gradient(r) ./ gradient(zc_ecco);
-            [~,index] = max(-drdz);
-% definition consistent with the diagnostic MLD
-% in MITgcm
-            MLD(i,j,t) = zc_ecco(index);
-        end
-    end
-end
-
-clear rho
+[MXLD] = rdmds([MXLD_dir 'MXLDEPTH'], [224244, 227904]);
 
 
 %% 
@@ -70,11 +53,12 @@ clear rho
 stepsize = 3600;
 
 figure
+subplot(1,2,1)
     plot(squeeze(ptr_prof(:,1)), zc_ecco, 'r', 'LineWidth',1.5)
     hold on
     plot(squeeze(ptr_prof(:,2)), zc_ecco, 'b', 'LineWidth',1.5)
-    yline(-MLD(nx,ny,1), 'LineWidth',1.5)
-    yline(-MLD(nx,ny,2),'-.', 'LineWidth',1.5)
+    yline(-MXLD(nx,ny,1), 'LineWidth',1.5)
+    yline(-MXLD(nx,ny,2),'-.', 'LineWidth',1.5)
 
     ylabel('Depth (m)')
     xlabel('\tau (g/m^3)')
@@ -87,9 +71,12 @@ figure
 
     x0=10;
     y0=10;
-    width=250;
+    width=500;
     height=350;
     set(gcf,'position',[x0,y0,width,height])
+
+    set(findall(gcf, '-property', 'FontSize'), 'FontSize', 16);
+    set(findall(gcf, '-property', 'FontName'), 'FontName', 'Times New Roman');
 
 
 

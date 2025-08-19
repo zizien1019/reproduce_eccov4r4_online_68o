@@ -31,19 +31,16 @@ Medi = (yc_ecco>=30)&(yc_ecco<=50)&(xc_ecco>=0)&(xc_ecco<=50) ...
 
 Glob = maskc(:,:,1);
 
-% look at the values in North Pacific in the following codes
+
 here = Npac;
 
 
 %%
 
-% specify where tracer data are stored
-datadir = '';
+datadir = '/Users/zengzien/Code_Research/GreatLakes/small_26yrs/ptr_3d/';
 ptr_num = 1;
 [ptr_3d,itr] = rdmds([datadir 'PTRtave0' num2str(ptr_num)], nan);
 
-% computes the avaraged value over a specific basin
-% specify which basin to look at in the previous section 
 ptr_have = zeros(length(itr));
 Asum = tensorprod(double(here), RAC, [1 2],[1 2]);
 
@@ -61,6 +58,7 @@ xc_ecco(xc_ecco<0) = xc_ecco(xc_ecco<0) + 360;
     DaysAfterStart = floor(itr/24);
     Month = mod(ceil(DaysAfterStart/(365/12)-1), 12)+1;
     Year = 1992 + DaysAfterStart / 365;
+
     
     yr13to17 = 253:312;
     plot(Year(yr13to17),ptr_have(yr13to17));

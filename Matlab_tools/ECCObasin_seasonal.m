@@ -14,14 +14,14 @@ nx = mod(wheremin, 90);
 
 %% 1. load tracer data
 
-% specify where data are
-data_dir = '';
+data_dir = '/Users/zengzien/Code_Research/GreatLakes/small_26yrs/ptr_3d/';
+
+itr = 227760-730*23 : 730 : 227760;
+ptr = rdmds([data_dir 'PTRtave01'],itr);
 
 % monthly average
 % 2012 Jan - 2017 Dec
 % 72 records in total
-itr = 227760-730*23 : 730 : 227760;
-ptr = rdmds([data_dir 'PTRtave01'],itr);
 
 DaysAfterStart = floor(itr/24);
 DateString = datestr(727564+DaysAfterStart);
@@ -33,12 +33,14 @@ ptr_surf =  squeeze(ptr(nx,ny,1,:));
 ptr_ML = zeros(24,1);
 
 
-%% 2. load density to determine MLD
+%% 2. load density to determine hb
 
-% directory containing the density anomoly files
-rho_dir = '';
+% directory containing the file
+
+rho_dir = '/Users/zengzien/Code_Research/GreatLakes/20240906_corr/ziens_Rhoanoma_monthly/';
 
 % Load Files
+
 itr = [ ...
     210372;
     211116;
@@ -70,7 +72,7 @@ itr = itr.';
 rho = rdmds([rho_dir 'RHOAnoma_mon_mean'], itr);
 
 
-MLD = zeros(90, 1170, 24);
+hb = zeros(90, 1170, 24);
 
 for t = 1 : 24
     for i = 1 : 90
@@ -79,21 +81,49 @@ for t = 1 : 24
             r = squeeze(rho(i,j,:,t));
             drdz = gradient(r) ./ gradient(zc_ecco);
             [~,index] = max(-drdz);
-% definition consistent with the diagnostic MLD
-% in MITgcm
-            MLD(i,j,t) = zc_ecco(index);
+            hb(i,j,t) = zc_ecco(index);
+            % ptr_ML(t) = squeeze(ptr(nx,ny,1:index)).' * squeeze(DRF(1:index));
         end
     end
 end
 
 clear rho
 
+%% 2. load diagnostic hb
+
+% % directory containing the file
+% 
+% MXLD_dir = '/Users/zengzien/Code_Research/GreatLakes/20240906_corr/MXLDEPTH_monthly/';
+% 
+% % Load Files
+% 
+% [~, itr] = rdmds([MXLD_dir 'MXLDEPTH'], nan);
+% MXLD = rdmds([MXLD_dir 'MXLDEPTH'], itr(312-23:312));
+% 
+% ptr_ML = zeros(24,1);
+% 
+% for t = 1 : 24
+%     dh = zeros(50,1);
+%     H = MXLD(nx,ny,t);
+%     for k = 1 : 50
+%         if H > 0
+%             dh(k) = min(H, DRF(k));
+%             H = H - DRF(k);
+%         elseif (H <= 0)
+%             dh(k) = 0;
+%         end
+%     end
+% 
+%     ptr_ML(t) = squeeze(ptr(nx,ny,:,t)).' * dh;
+% end
+
+
 
 %% 3. load velocity for horizontal divergence
 
-% directory containing the ECCO circulation files
+% directory containing the file
 
-vel_dir = '~/ECCO_V4r4_PODAAC/ECCO_L4_OCEAN_VEL_05DEG_MONTHLY_V4R4/';
+vel_dir = '/Users/zengzien/Downloads/ECCO_V4r4_PODAAC/ECCO_L4_OCEAN_VEL_05DEG_MONTHLY_V4R4/';
 
 % Load Files
 myFolder = vel_dir;
@@ -140,9 +170,9 @@ for k = 14+72-23 : 14+72
     theta = y_podaac_t *pi/180;
     r = 6.4e6;
 
-    [v_py, v_px] = gradient(v);
-    [u_py, u_px] = gradient(u .* cos(theta));
-    div_pd = (u_px + v_py);
+    [v_py, v_px] = gradient(v ./ cos(theta));
+    [u_py, u_px] = gradient(u);
+    div_pd = (u_px + v_py) / r;
 
 
     div(:,:,k-14-72+24) = interp2(x_podaac,y_podaac,div_pd.', xc_ecco,yc_ecco);
@@ -151,8 +181,8 @@ end
 
 %% 4. load wind stress for upwelling
 
-% directory containing the ECCO surface stress files
-stress_dir = '~/ECCO_V4r4_PODAAC/ECCO_L4_STRESS_05DEG_MONTHLY_V4R4';
+% directory containing the file
+stress_dir = '/Users/zengzien/Downloads/ECCO_V4r4_PODAAC/ECCO_L4_STRESS_05DEG_MONTHLY_V4R4';
 
 % Load Files
 
@@ -210,12 +240,18 @@ for k = 240+72-23 : 240+72
     f = 2 * 7.2921e-5 * sin(theta);
 
     w_upwelling_pd = curl ./ f / rho0;
+    % w_upwelling(:,:,k-240-72+24) = w_upwelling_pd;
 
     w_upwelling(:,:,k-240-72+24) = interp2(x_podaac,y_podaac,w_upwelling_pd.', xc_ecco,yc_ecco);
     
+
+    % F = scatteredInterpolant(x_podaac(:),y_podaac(:),w_upwelling_pd(:),'natural');
+    % w_upwelling(:,:,k-240) = F(xc_ecco,yc_ecco);
+    % w_upward(:,:,k-240) = interp2(x_podaac,y_podaac,w_upwelling_pd.', xc_ecco,yc_ecco);
+
 end
+
 %% construct mask for each basin
-% apply the mask if interested in any specific basin
 
 % Npac = ((yc_ecco>=18)&(yc_ecco<=38)&(xc_ecco>=150)&(xc_ecco<=230)) ...
 %     & maskc;
@@ -242,80 +278,74 @@ end
 
 
 %% hor_ave
-% plot two years of monthly averaged values
 
 Nstps = 1 : 24;
 Monthnum = 1 : 12;
 
-figuredir = '/Users/zengzien/UMich Research/zien_paper/figures/';
+figuredir = '/Users/zengzien/UMich Research/zien_paper_1/compound_figures_inclusive/';
 
-    figure(1)
-    subplot(14,1,[2:13])
-    ptr_surf(ptr_surf==0) = nan;
-    plot(Nstps, squeeze(ptr_surf(Nstps)), 'LineWidth',1.5)
-    % hold on
-    % plot(Nstps, squeeze(ptr_ML(Nstps))/mean(ptr_ML(Nstps)), 'LineWidth',1.5)
-    set(gca,'xtick',1:24,...
-        'xticklabel',{'J','F','M','A','M','J','J','A','S','O','N','D','J','F','M','A','M','J','J','A','S','O','N','D'})
-    xlabel('Month')
-    ylabel('\tau (g/m^3)')
-    yscale('linear')
-    % legend('Surface concentration', 'Total within ML', 'Location','best')
-    % axis([-0.5 12.5 1e-3 1e2])
-    x0=10;
-    y0=10;
-    width=400;
-    height=200;
-    set(gcf,'position',[x0,y0,width,height])
-    saveas(gcf, [figuredir '10mum_corr_4way_tau.png'])
-
-
+figure(1)
     
-    figure(2)
-    subplot(14,1,[2:13])
-    plot(Nstps, squeeze(MLD(nx,ny,Nstps)), 'LineWidth',1.5)
+    ax = subplot(2,2,1);
+    ax.Position(1) = ax.Position(1);
+    ax.Position(2) = ax.Position(2) + 0.08;
+    ax.Position(4) = ax.Position(4) * 0.6;
+    plot(Nstps, squeeze( - hb(nx,ny,Nstps)), 'LineWidth',1.5)
     set(gca,'xtick',1:24,...
         'xticklabel',{'J','F','M','A','M','J','J','A','S','O','N','D','J','F','M','A','M','J','J','A','S','O','N','D'})
-    xlabel('Month')
+    xlabel(['Month' newline newline '(a)'])
     ylabel('MLD (m)')
     grid on
-    x0=10;
-    y0=10;
-    width=400;
-    height=200;
-    set(gcf,'position',[x0,y0,width,height])
-     saveas(gcf, [figuredir '10mum_corr_4way_MLD.png'])
+    
 
-    figure(3)
-    subplot(14,1,[2:13])
+    ax = subplot(2,2,2);
+    ax.Position(1) = ax.Position(1) - 0.03;
+    ax.Position(2) = ax.Position(2) + 0.08;
+    ax.Position(4) = ax.Position(4) * 0.6;
     plot(Nstps, squeeze(div(nx,ny,Nstps)), 'LineWidth',1.5)
     set(gca,'xtick',1:24,...
         'xticklabel',{'J','F','M','A','M','J','J','A','S','O','N','D','J','F','M','A','M','J','J','A','S','O','N','D'})
-    xlabel('Month')
+    xlabel(['Month' newline newline '(b)'])
     ylabel('\nabla_h \cdot u_h (1/s)')
-    x0=10;
-    y0=10;
-    width=400;
-    height=200;
-    set(gcf,'position',[x0,y0,width,height])
-     saveas(gcf, [figuredir '10mum_corr_4way_uh.png'])
+    grid on
     
-    figure(4)
-    subplot(14,1,[2:13])
+    
+    ax = subplot(2,2,3);
+    ax.Position(1) = ax.Position(1);
+    ax.Position(2) = ax.Position(2) + 0.15;
+    ax.Position(4) = ax.Position(4) * 0.6;
     plot(Nstps, squeeze(w_upwelling(nx,ny,Nstps)), 'LineWidth',1.5)
     set(gca,'xtick',1:24,...
         'xticklabel',{'J','F','M','A','M','J','J','A','S','O','N','D','J','F','M','A','M','J','J','A','S','O','N','D'})
-    xlabel('Month')
+    xlabel(['Month' newline newline '(c)'])
     ylabel('w_E (m/s)')
+    grid on
+
+    ax = subplot(2,2,4);
+    ax.Position(1) = ax.Position(1) - 0.03;
+    ax.Position(2) = ax.Position(2) + 0.15;
+    ax.Position(4) = ax.Position(4) * 0.6;
+    ptr_surf(ptr_surf==0) = nan;
+    plot(Nstps, squeeze(ptr_surf(Nstps)), 'LineWidth',1.5)
+    set(gca,'xtick',1:24,...
+        'xticklabel',{'J','F','M','A','M','J','J','A','S','O','N','D','J','F','M','A','M','J','J','A','S','O','N','D'})
+    xlabel(['Month' newline newline '(d)'])
+    ylabel('\tau (g/m^3)')
+    grid on
+
     x0=10;
     y0=10;
-    width=400;
-    height=200;
+    width=1000;
+    height=600;
     set(gcf,'position',[x0,y0,width,height])
-     saveas(gcf, [figuredir '10mum_corr_4way_we.png'])
 
 
 
+    set(findall(gcf, '-property', 'FontSize'), 'FontSize', 18);
+    set(findall(gcf, '-property', 'FontName'), 'FontName', 'Times New Roman');
+
+    % saveas(gcf, [figuredir 'figure9.png'])
+    % savefig(gcf, [figuredir 'figure9.fig'])
 
 
 
