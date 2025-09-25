@@ -1,0 +1,14 @@
+ &GCHEM_PARM01
+  useCFC    = .FALSE.,
+  useDIC    = .FALSE.,
+  useBLING  = .FALSE.,
+  useDARWIN = .FALSE.,
+  nsubtime=6,
+
+# Tracer source file
+#  source along coast based on Jambeck et al 2015.
+#  and scaled with 2015 GDP data from worldbank 
+ Filename1 = 'source_2010_ppmps.bin',
+ Filename2 = 'unit_sw_tave.bin',
+ &
+ 

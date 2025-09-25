@@ -1,0 +1,182 @@
+# Age Tracer set-up: No initial file means Age Tracer
+# is automatically initialized uniformely to zero.
+ &PTRACERS_PARM01
+
+ PTRACERS_numInUse = 26,
+ PTRACERS_Iter0 = 1,
+
+# # PTRACERS_dumpFreq is default to dumpFreq in "data"
+#  # every 7 day
+ PTRACERS_dumpFreq = 604800.0,
+#  # every 7.5 day
+#  PTRACERS_dumpFreq = 648000.0,
+#  # every 30 day
+#  PTRACERS_dumpFreq = 2592000.0,
+#  # every 90 days
+#  PTRACERS_dumpFreq = 7776000.0,
+#  # every year
+#  PTRACERS_dumpFreq = 31536000.0,
+#  # every 1/12 year
+#  PTRACERS_taveFreq = 2628000.0,
+
+ PTRACERS_rho_0 = 900,
+ PTRACERS_d_0   = 50.E-6,
+ PTRACERS_delA  = 2.E9,
+
+#
+ PTRACERS_advScheme(1) = 77,
+ PTRACERS_diffKh(1) = 0.1E3,
+ PTRACERS_diffKr(1) = 0.,
+ PTRACERS_initialFile(1) = 'MPs_900_10.bin',
+
+#
+ PTRACERS_advScheme(2) = 77,
+ PTRACERS_diffKh(2) = 0.1E3,
+ PTRACERS_diffKr(2) = 0.,
+ PTRACERS_initialFile(2) = 'MPs_900_10.bin',
+
+#
+ PTRACERS_advScheme(3) = 77,
+ PTRACERS_diffKh(3) = 0.1E3,
+ PTRACERS_diffKr(3) = 0.,
+ PTRACERS_initialFile(3) = '',
+
+#
+ PTRACERS_advScheme(4) = 77,
+ PTRACERS_diffKh(4) = 0.1E3,
+ PTRACERS_diffKr(4) = 0.,
+ PTRACERS_initialFile(4) = '',
+
+#
+ PTRACERS_advScheme(5) = 77,
+ PTRACERS_diffKh(5) = 0.1E3,
+ PTRACERS_diffKr(5) = 0.,
+ PTRACERS_initialFile(5) = '',
+
+#
+ PTRACERS_advScheme(6) = 77,
+ PTRACERS_diffKh(6) = 0.1E3,
+ PTRACERS_diffKr(6) = 0.,
+ PTRACERS_initialFile(6) = '',
+
+#
+ PTRACERS_advScheme(7) = 77,
+ PTRACERS_diffKh(7) = 0.1E3,
+ PTRACERS_diffKr(7) = 0.,
+ PTRACERS_initialFile(7) = '',
+
+#
+ PTRACERS_advScheme(8) = 77,
+ PTRACERS_diffKh(8) = 0.1E3,
+ PTRACERS_diffKr(8) = 0.,
+ PTRACERS_initialFile(8) = '',
+
+#
+ PTRACERS_advScheme(9) = 77,
+ PTRACERS_diffKh(9) = 0.1E3,
+ PTRACERS_diffKr(9) = 0.,
+ PTRACERS_initialFile(9) = '',
+
+#
+ PTRACERS_advScheme(10) = 77,
+ PTRACERS_diffKh(10) = 0.1E3,
+ PTRACERS_diffKr(10) = 0.,
+ PTRACERS_initialFile(10) = '',
+
+#
+ PTRACERS_advScheme(11) = 77,
+ PTRACERS_diffKh(11) = 0.1E3,
+ PTRACERS_diffKr(11) = 0.,
+ PTRACERS_initialFile(11) = '',
+
+#
+ PTRACERS_advScheme(12) = 77,
+ PTRACERS_diffKh(12) = 0.1E3,
+ PTRACERS_diffKr(12) = 0.,
+ PTRACERS_initialFile(12) = '',
+
+#
+ PTRACERS_advScheme(13) = 77,
+ PTRACERS_diffKh(13) = 0.1E3,
+ PTRACERS_diffKr(13) = 0.,
+ PTRACERS_initialFile(13) = '',
+
+#
+ PTRACERS_advScheme(14) = 77,
+ PTRACERS_diffKh(14) = 0.1E3,
+ PTRACERS_diffKr(14) = 0.,
+ PTRACERS_initialFile(14) = '',
+
+#
+ PTRACERS_advScheme(15) = 77,
+ PTRACERS_diffKh(15) = 0.1E3,
+ PTRACERS_diffKr(15) = 0.,
+ PTRACERS_initialFile(15) = '',
+
+#
+ PTRACERS_advScheme(16) = 77,
+ PTRACERS_diffKh(16) = 0.1E3,
+ PTRACERS_diffKr(16) = 0.,
+ PTRACERS_initialFile(16) = '',
+
+#
+ PTRACERS_advScheme(17) = 77,
+ PTRACERS_diffKh(17) = 0.1E3,
+ PTRACERS_diffKr(17) = 0.,
+ PTRACERS_initialFile(17) = '',
+
+#
+ PTRACERS_advScheme(18) = 77,
+ PTRACERS_diffKh(18) = 0.1E3,
+ PTRACERS_diffKr(18) = 0.,
+ PTRACERS_initialFile(18) = '',
+
+#
+ PTRACERS_advScheme(19) = 77,
+ PTRACERS_diffKh(19) = 0.1E3,
+ PTRACERS_diffKr(19) = 0.,
+ PTRACERS_initialFile(19) = '',
+
+#
+ PTRACERS_advScheme(20) = 77,
+ PTRACERS_diffKh(20) = 0.1E3,
+ PTRACERS_diffKr(20) = 0.,
+ PTRACERS_initialFile(20) = '',
+
+#
+ PTRACERS_advScheme(21) = 77,
+ PTRACERS_diffKh(21) = 0.1E3,
+ PTRACERS_diffKr(21) = 0.,
+ PTRACERS_initialFile(21) = '',
+
+#
+ PTRACERS_advScheme(22) = 77,
+ PTRACERS_diffKh(22) = 0.1E3,
+ PTRACERS_diffKr(22) = 0.,
+ PTRACERS_initialFile(22) = '',
+
+#
+ PTRACERS_advScheme(23) = 77,
+ PTRACERS_diffKh(23) = 0.1E3,
+ PTRACERS_diffKr(23) = 0.,
+ PTRACERS_initialFile(23) = '',
+
+#
+ PTRACERS_advScheme(24) = 77,
+ PTRACERS_diffKh(24) = 0.1E3,
+ PTRACERS_diffKr(24) = 0.,
+ PTRACERS_initialFile(24) = '',
+
+#
+ PTRACERS_advScheme(25) = 77,
+ PTRACERS_diffKh(25) = 0.1E3,
+ PTRACERS_diffKr(25) = 0.,
+ PTRACERS_initialFile(25) = '',
+
+#
+ PTRACERS_advScheme(26) = 77,
+ PTRACERS_diffKh(26) = 0.1E3,
+ PTRACERS_diffKr(26) = 0.,
+ PTRACERS_initialFile(26) = '',
+
+&

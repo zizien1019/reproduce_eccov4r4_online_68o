@@ -1,0 +1,6 @@
+2025, July 3rd
+Author: Zih-En Tseng
+Affiliation: UMichigan, NA&ME
+
+User should modify the file "GCHEM_SIZE.h"
+to change number of ptracers that are subject to biofouling.
