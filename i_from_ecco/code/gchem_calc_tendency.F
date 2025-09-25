@@ -31,8 +31,6 @@ C !USES: ===============================================================
 #include "GCHEM_FIELDS.h"
 CCCCCCCC include exf to gain access to swflux (negative downward)  
 #include "EXF_FIELDS.h"
-      INTEGER CAL_BIWEEK_FROM_MYTIME
-      EXTERNAL CAL_BIWEEK_FROM_MYTIME
 #ifdef ALLOW_CFC
 # include "CFC_SIZE.h"
 #endif
@@ -85,7 +83,7 @@ C     phi(Nr)     :: temperature influence
       _RL Topt, Tmin, Tmax
       _RL mu_opt(Nr), mu(Nr), phi(Nr)
 
-      INTEGER myIter, myThid, nBiweek
+      INTEGER myIter, myThid
 CEOP
 
 #ifdef GCHEM_ADD2TR_TENDENCY
@@ -170,9 +168,6 @@ C     Feb 2025, by Alan:
 C     Biofouling based on (KOOI 2017)
 C     https://doi.org/10.1016/j.marpol.2017.01.001
 
-C     First of all find the number of bi-week
-C     of the current time step
-      nBiweek = cal_biweek_from_mytime(myTime, myIter, myThid)
 C     Define the conversion factor from W/m2 to uE/m2-day
 C     assuming average photon wavelength of 550 nm
 C     each photon has  3.61e-19 J  energy  
@@ -209,23 +204,7 @@ C     Only do for tracers used with biofouling
          DO j = 1-OLy, sNy+OLy
           DO i = 1-OLx, sNx+OLx
 
-            daytime_angle = 2.*pi/360.*xC(i,j,bi,bj) 
-     &            + 2.*pi/86400.*myTime
-            decline = 2.*pi/360. * 23.45
-     &       * DSIN(
-     &            2.*pi / 365.25 * ( 284. + myTime/86400. )
-     &             )
-            IF (average1(i,j,nBiweek,bi,bj) .EQ. 0.) THEN
-                  I_surf = - swflux(i,j,bi,bj) * W_to_uE_day
-            ELSE
-                  I_surf = - swflux(i,j,bi,bj) * W_to_uE_day
-     &             / average1(i,j,nBiweek,bi,bj)
-     &          *(  
-     &            DSIN(2*pi/360*yC(i,j,bi,bj)) * DSIN(decline)
-     &          + DCOS(2*pi/360*yC(i,j,bi,bj)) * DCOS(decline) 
-     &                                   * DCOS(daytime_angle)
-     &           )
-            ENDIF
+            I_surf = - swflux(i,j,bi,bj) * W_to_uE_day
 
 
            DO k = 1, Nr
