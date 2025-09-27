@@ -82,8 +82,7 @@ C     phi(Nr)     :: temperature influence
 
       _RL tr_projA, k_bolz, r_A, Vbf
       _RL D_pl(Nr), D_A(Nr), b_brown(Nr), w_r(Nr)
-      _RL Chla_by_C(Nr), Chla(Nr), A_A(Nr)
-      _RL daytime_angle, decline
+      _RL A_A(Nr)
       _RL I_surf, Inc(Nr), W_to_uE_day
       _RL Topt, Tmin, Tmax
       _RL mu_opt(Nr), mu(Nr), phi(Nr)
