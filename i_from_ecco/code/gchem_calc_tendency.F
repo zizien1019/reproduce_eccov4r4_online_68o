@@ -58,12 +58,17 @@ C     b_brown(Nr) :: Brownian motion encounter kernel rate
 C     w_r(Nr)     :: falling velocity of a particle
 C     r_A         :: algae cell radius
 C     Vbf         :: biofilm volume on one particle
+
 C     Chla(Nr)    :: ambient Chl-a concentration
 C     Chla_by_C(Nr)  :: ambient Carbon concentration
-C     A_A(Nr)     :: ambient algae cell concentration
+
+C     algae_ambient :: ambient algae cell concentration
+
 C     I_surf      :: radiation received at surface
 C                    in uE/m2-day
 C     Inc(Nr)     :: amount of incident radiation
+C           note: I_surf from ECCOv4r5, exponential decay with depth
+
 C     W_to_uE_day :: conversion factor from W/m2 to uE/m2-day
 C     mu_opt(Nr)  :: optimal growth rate in (1/day)
 C     mu(Nr)      :: growth rate in (1/day)
@@ -217,18 +222,12 @@ C     Only do for tracers used with biofouling
 ! C         % water density             :: rhoInSitu(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
 ! C           !!!! actual rho = rhoInSitu + rhoConst
 ! C         % water dynamic viscosity   :: use 0.001
-! C         % Chl-a                     :: Chla(Nr)
-            Chla(k) = 0.
-            IF (rC(k) .GT. -99.9) THEN
-            Chla(k) = 0.151 * (
-     &            0.533 + 1.72E-3 * rC(k)
-     &            + 1.194 * exp(-((rC(k)+92.01)/43.46)**2)
-     &       )
-            ENDIF
+
 
 ! C         % radiation at surface   :: I_surf in uE/m2-day
 ! C         % radiation at depth r   :: Inc(Nr)
-! C         % light exdinction       :: * exp( (0.2+0.02*Chla(k)) * rC(k))
+! C         % light exdinction       :: exponential decay with depth
+! C                                  :: * exp( (0.2+0.02*Chla(k)) * rC(k))
             Inc(k) = I_surf * exp( (0.2+0.02*Chla(k)) * rC(k))
             IF (Inc(k) .LT. 0) THEN
                   Inc(k) = 0.
@@ -240,25 +239,21 @@ C     Only do for tracers used with biofouling
 ! C         % diffusivity               :: D_A(Nr)
 ! C         % velocity                  :: w_r(Nr)
 ! C         % kernel rate               :: b_brown(Nr)
-! C         % ambient carbon            :: C(Nr)   (mg/m^3)
 ! C         % ambient algae             :: A_A(Nr) (#cell/m^3) 
             D_pl(k) = k_bolz* (theta(i,j,k,bi,bj)+273.16) 
-     &            / (6. * PI * 0.001 * PTRACERS_d_p(jTr) / 2.)
+     &            / (6. * PI * 0.001 * PTRACERS_d_p(iTr) / 2.)
             D_A(k)  = k_bolz* (theta(i,j,k,bi,bj)+273.16) 
      &            / (6. * PI * 0.001 * r_A)
-            w_r(k)=abs((PTRACERS_rho_p(jTr)+PTRACERS_rho_p(jTr+1))/2.
+            w_r(k)=abs((PTRACERS_rho_p(iTr)+PTRACERS_rho_p(iTr+1))/2.
      &            - rhoConst - rhoInSitu(i,j,k,bi,bj))
-     &            * 9.81 * PTRACERS_d_p(jTr)**2 / 18. / 0.001
+     &            * 9.81 * PTRACERS_d_p(iTr)**2 / 18. / 0.001
             b_brown(k) = 4. * PI * (D_pl(k) + D_A(k)) *
-     &            (PTRACERS_d_p(jTr) / 2. + r_A)
-     &            + 0.5 * PI * (PTRACERS_d_p(jTr)/2)**2 * w_r(k)
+     &            (PTRACERS_d_p(iTr) / 2. + r_A)
+     &            + 0.5 * PI * (PTRACERS_d_p(iTr)/2)**2 * w_r(k)
      &            + 1.3 * (1.7E5 / 86400.) *
-     &              (PTRACERS_d_p(jTr)/2. + r_A)**3
-! C         % ambient algae concentration
-            Chla_by_C(k) = 0.003
-     &        + 0.0154 * exp(0.05 * theta(i,j,k,bi,bj)
-     &        - 0.059 * Inc(k) / 1.E6)
-            A_A(k) = Chla(k) / Chla_by_C(k) / (2726.E-9)
+     &              (PTRACERS_d_p(iTr)/2. + r_A)**3
+            A_A(k) = algae_ambient(i,j,k,bi,bj)
+
             
 ! C         % mu_opt(Nr) :: optimal growth rate in (1/day)
 ! C         % mu(Nr)     :: growth rate in (1/day)
@@ -309,9 +304,9 @@ C     Only do for tracers used with biofouling
 
             IF ((bio_dAdt(i,j,k,bi,bj,jTr)
      &         + bio_dAdt(i,j,k,bi,bj,jTr+1)) .GT. 0.) THEN
-             tr_projA = pTracer(i,j,k,bi,bj,jTr)
+             tr_projA = pTracer(i,j,k,bi,bj,iTr)
             ELSE
-             tr_projA = pTracer(i,j,k,bi,bj,jTr+1)
+             tr_projA = pTracer(i,j,k,bi,bj,iTr+1)
             ENDIF
 
             bio_flux(i,j,k,bi,bj,jTr) = 

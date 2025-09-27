@@ -88,8 +88,7 @@ C                             and finish with those using gchem-tendency
 C ==================
 C Here starts the modification
 C ==================
-C I dont care how many tracers it register for this test 
-C I will register my own number of tracers
+C Register my own number of tracers
 C--   Set the number I use for geo-chemistry tracers
 C--   set gchem_Tracer_num = PTRACERS_n_d_0*PTRACERS_n_A
       gchem_Tracer_num = 120

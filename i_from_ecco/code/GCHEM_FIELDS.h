@@ -24,14 +24,14 @@ C                   * assuming the magnitude is UNITY.
      &                  GCHEM_tendTr_num)
       _RL gchemSource(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy,
      &                  GCHEM_tendTr_num)
-      _RL average1(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
+      _RL algae_ambient(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
 
       COMMON /GCHEM_FIELDS/
      &     gchemTendency,
      &     bio_dAdt,
      &     bio_flux,
      &     gchemSource,
-     &     average1
+     &     algae_ambient
 
 #endif /* GCHEM_ADD2TR_TENDENCY */
 CEOP

@@ -30,10 +30,10 @@ C     PARAMETER( GCHEM_tendTr_num = 3 )
       PARAMETER( SPOIL_Tr_num = 0 )
 #endif /* ALLOW_SPOIL */
 
+C     PARAMETER( GCHEM_tendTr_num = CFC_Tr_num + SPOIL_Tr_num )
+
 C Here is a modifiction by Alan
-C      PARAMETER( GCHEM_tendTr_num = CFC_Tr_num + SPOIL_Tr_num )
-C commented out by Alan since it generated multiple declaration error
-C and I will set GCHEM_tendTr_num = PTRACERS_n_d_0*PTRACERS_n_A
+C I will set GCHEM_tendTr_num = PTRACERS_n_d_0*PTRACERS_n_A
       PARAMETER( GCHEM_tendTr_num = 120)
 CEOP
 #endif /* ALLOW_GCHEM */
