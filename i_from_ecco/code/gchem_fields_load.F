@@ -44,6 +44,8 @@ C  tmpSourceFile        :: temporary source file name to read in
       CHARACTER*(MAX_LEN_FNAM) tmpSourceFile
 CEOP
 
+#ifdef ALLOW_GCHEM
+#ifdef GCHEM_ADD2TR_TENDENCY
 C     gchemSource & gchemTendency are initialized here
       DO jTr = 1, GCHEM_tendTr_num
        DO bj=myByLo(myThid),myByHi(myThid)
@@ -119,12 +121,11 @@ C     Apply mask
         ENDDO
        ENDDO
 
+#endif /* GCHEM_ADD2TR_TENDENCY */
 C =========
 C Here ends the modification.
 C Hope this works :P
 C =========
-
-#ifdef ALLOW_GCHEM
 
 cccccccccccccccccccccccccc
 c load external data     c
