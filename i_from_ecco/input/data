@@ -34,8 +34,8 @@
 # balanceEmPmR=.TRUE.,
 # balanceQnet=.TRUE.,
  allowFreezing=.FALSE.,
- hFacInf=0.,
- hFacSup=2.0,
+### hFacInf=0.2,
+### hFacSup=2.0,
  hFacMin=.2,
  hFacMinDr=5.,
  select_rStar=2,
@@ -62,8 +62,8 @@
  useJamartWetPoints=.TRUE.,
  readBinaryPrec=32,
  writeBinaryPrec=32,
- debugLevel=1,
- 
+ selectAddFluid=1,
+ debugLevel=-1, 
 # Alan's rising model
 # must not be used with
 # multi-dimensional advection !!!
@@ -77,22 +77,7 @@
  /
 
 # Time stepping parameters
- &PARM03
 
- nIter0=1,
-#  nTimeSteps=8760,
- nTimeSteps=90000,
-# every 10 years
-#  pChkptFreq  =315360000.0,
-# every 5 years
- pChkptFreq  =157680000.0,
- chkptFreq   =157680000.0,
-#  taveFreq    =315360000.0,
- monitorFreq = 31536000.0,
- dumpFreq    =157680000.0,
-
-#2 lev2 for testing:
-#  nTimeSteps=8,
 #3month
 #nTimeSteps=2160,
 #18month
@@ -102,15 +87,29 @@
 #4-yr from 2014 to 2017, inclusive
 #nTimeSteps=35051,
 #20y:
-# nTimeSteps=175295,
+#nTimeSteps=175295,
 #22y:
-# nTimeSteps=192839,
+#nTimeSteps=192839,
 #24y:
 #nTimeSteps=210359,
-#26y:
-# nTimesteps=227903,
+#26yr 
+#nTimeSteps=227903,
+#28yr
+#nTimeSteps=245422,
 #60 years
 #nTimeSteps=525985,
+
+ &PARM03
+
+ nIter0=2,
+#  nTimeSteps=8760,
+ nTimeSteps=90000,
+# every 5 years
+ pChkptFreq  = 157680000.0,
+ chkptFreq   = 157680000.0,
+ taveFreq    =  31536000.0,
+ monitorFreq =  31536000.0,
+ dumpFreq    = 157680000.0,
 #
  forcing_In_AB=.FALSE.,
  momDissip_In_AB=.FALSE.,
@@ -122,23 +121,16 @@
  deltaTfreesurf=1800.,
  deltaTClock =3600.,
 #when using ab2:
-#  abEps = 0.1,
+# abEps = 0.1,
 #when using ab3:
  doAB_onGtGs=.FALSE.,
  alph_AB=0.5,
  beta_AB=0.281105,
-# #
-#  pChkptFreq  =315360000.0,
-#  chkptFreq   =315360000.0,
-#  taveFreq    =315360000.0,
-#  dumpFreq    =315360000.0,
-#  dumpFreq    =3600.0,
-#  monitorFreq = 3600.0,
-#  monitorFreq = 31536000.0,
+
  dumpInitAndLast = .TRUE.,
-#  adjDumpFreq = 31536000.0,
-#  adjDumpFreq = 604800.0,
-#  adjMonitorFreq = 864000.0,
+#adjDumpFreq = 31536000.0,
+#adjDumpFreq = 604800.0,
+#adjMonitorFreq = 864000.0,
  pickupStrictlyMatch=.FALSE.,
  /
 
@@ -156,10 +148,9 @@
 
 # Input datasets
  &PARM05
- diffKrFile='total_diffkr_r009bit11.bin',
+ diffKrFile='eccov4_r5_diffkr.data',
  adTapeDir='tapes',
-#bathyFile      ='bathy_eccollc_90x50.bin',
- bathyFile      ='bathy_eccollc_90x50_min2pts.bin',
+ bathyFile      ='BATHY_ICE_SHELF_CAVITY_PLUS_ICE_FRONT_LLC_0090.bin',
  hydrogThetaFile='T_OWPv1_M_eccollc_90x50.bin',
  hydrogSaltFile ='S_OWPv1_M_eccollc_90x50.bin',
  viscA4Dfile    ='fenty_biharmonic_visc_v11.bin',
