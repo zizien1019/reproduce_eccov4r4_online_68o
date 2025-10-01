@@ -7,7 +7,7 @@
  useShelfIce=.TRUE.,
  useGGL90=.TRUE.,
  useSALT_PlUME=.TRUE.,
- useDiagnostics=.TRUE.,
+ useDiagnostics=.FALSE.,
  usePTRACERS=.TRUE.,
  useGCHEM=.TRUE.,
  /
