@@ -7,7 +7,12 @@
  useShelfIce=.TRUE.,
  useGGL90=.TRUE.,
  useSALT_PlUME=.TRUE.,
+<<<<<<< HEAD
  useDiagnostics=.FALSE.,
+=======
+ useDiagnostics=.TRUE.,
+ useTIMEAVE = .TRUE.,
+>>>>>>> 5e1fb8738f03512d3294efaf3f4e015a8aafb526
  usePTRACERS=.TRUE.,
  useGCHEM=.TRUE.,
  /
