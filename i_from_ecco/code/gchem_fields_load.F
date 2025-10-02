@@ -113,7 +113,7 @@ C     Apply mask
           DO j=1-OLy,sNy+OLy
            DO i=1-OLx,sNx+OLx
             IF (maskC(i,j,k,bi,bj) .EQ. 0.) THEN
-                plankton_ambient(i,j,k,bi,bj,jTr)=0. _d 0
+                plankton_ambient(i,j,k,bi,bj)=0. _d 0
             ENDIF
            ENDDO
           ENDDO
