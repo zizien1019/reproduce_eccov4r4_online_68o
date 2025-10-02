@@ -30,7 +30,7 @@ ECCOv4r5_DD='/scratch/group/p.phy250235.000/alan/Release5/'
 cd $SIMULA_HOST
 
 rm -rf $SIMULA_HOST/code/*
-cp $RUNNER_HOME/ecco_v4r5/code/*    $SIMULA_HOST/code/
+cp $RUNNER_HOME/git/reproduce_eccov4r4_online_68o/ecco_v4r5/code/*    $SIMULA_HOST/code/
 cp $RUNNER_HOME/git/reproduce_eccov4r4_online_68o/i_from_ecco/code/*  $SIMULA_HOST/code
 
 
@@ -62,7 +62,7 @@ ln -s $ECCOv4r5_DD/freshwater_runoff/* .
 ln -s $ECCOv4r5_DD/TBADJ .
 
 rm -rf $SIMULA_HOST/input/*
-cp $RUNNER_HOME/ecco_v4r5/input/*    $SIMULA_HOST/input/
+cp $RUNNER_HOME/git/reproduce_eccov4r4_online_68o/ecco_v4r5/input/*    $SIMULA_HOST/input/
 cp $RUNNER_HOME/git/reproduce_eccov4r4_online_68o/i_from_ecco/input/*  $SIMULA_HOST/input
 ln -s $SIMULA_HOST/input/* .
 ln -s $ECCOv4r5_DD/input_bin/* .
