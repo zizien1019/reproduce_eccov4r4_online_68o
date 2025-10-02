@@ -14,6 +14,13 @@
 # and propagate errors in pipelines (safer/stricter mode).
 set -euo pipefail
 
+
+
+
+
+
+
+
 export LANG=en_US.utf8
 export LC_ALL=en_US.utf8
 
@@ -27,24 +34,24 @@ ECCOv4r5_DD='/scratch/group/p.phy250235.000/alan/Release5/'
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # %%%%%%%%%%%%%%%%%%%%%
 
-# cd $SIMULA_HOST
+cd $SIMULA_HOST
 
-# rm -rf $SIMULA_HOST/code/*
-# cp $RUNNER_HOME/git/reproduce_eccov4r4_online_68o/ecco_v4r5/code/*    $SIMULA_HOST/code/
-# cp $RUNNER_HOME/git/reproduce_eccov4r4_online_68o/i_from_ecco/code/*  $SIMULA_HOST/code
+rm -rf $SIMULA_HOST/code/*
+cp $RUNNER_HOME/git/reproduce_eccov4r4_online_68o/ecco_v4r5/code/*    $SIMULA_HOST/code/
+cp $RUNNER_HOME/git/reproduce_eccov4r4_online_68o/i_from_ecco/code/*  $SIMULA_HOST/code
 
 
-# cd $SIMULA_HOST/build
+cd $SIMULA_HOST/build
 
-# module purge
-# module load intel-compilers/2021.4.0
-# module load impi/2021.4.0
+module purge
+module load intel-compilers/2021.4.0
+module load impi/2021.4.0
 
-# make CLEAN
-# $RUNNER_HOME/MITgcm/tools/genmake2 -mods=$SIMULA_HOST/code -rd=$RUNNER_HOME/MITgcm/ -optfile=$SIMULA_HOST/linux_amd64_ifort+impi -mpi
+make CLEAN
+$RUNNER_HOME/MITgcm/tools/genmake2 -mods=$SIMULA_HOST/code -rd=$RUNNER_HOME/MITgcm/ -optfile=$SIMULA_HOST/linux_amd64_ifort+impi -mpi
 
-# make depend
-# make all
+make depend
+make all
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -54,21 +61,32 @@ ECCOv4r5_DD='/scratch/group/p.phy250235.000/alan/Release5/'
 # arrange files in run/
 
 
-# cd $SIMULA_HOST/run
+cd $SIMULA_HOST/run
 
-# rm -rf $SIMULA_HOST/run/*
+rm -rf $SIMULA_HOST/run/*
 
-# ln -s $RUNNER_HOME/gcmfaces_climatologies/* .
-# ln -s $ECCOv4r5_DD/freshwater_runoff/* .
-# ln -s $ECCOv4r5_DD/TBADJ .
+ln -s $RUNNER_HOME/gcmfaces_climatologies/* .
+ln -s $ECCOv4r5_DD/freshwater_runoff/* .
+ln -s $ECCOv4r5_DD/TBADJ .
 
-# rm -rf $SIMULA_HOST/input/*
-# cp $RUNNER_HOME/git/reproduce_eccov4r4_online_68o/ecco_v4r5/input/*    $SIMULA_HOST/input/
-# cp $RUNNER_HOME/git/reproduce_eccov4r4_online_68o/i_from_ecco/input/*  $SIMULA_HOST/input
-# ln -s $SIMULA_HOST/input/* .
-# ln -s $ECCOv4r5_DD/input_bin/* .
+rm -rf $SIMULA_HOST/input/*
+cp $RUNNER_HOME/git/reproduce_eccov4r4_online_68o/ecco_v4r5/input/*    $SIMULA_HOST/input/
+cp $RUNNER_HOME/git/reproduce_eccov4r4_online_68o/i_from_ecco/input/*  $SIMULA_HOST/input
+ln -s $SIMULA_HOST/input/* .
+ln -s $ECCOv4r5_DD/input_bin/* .
 
-# cp -p $SIMULA_HOST/build/mitgcmuv .
+cp -p $SIMULA_HOST/build/mitgcmuv .
+
+
+
+
+
+
+
+
+
+
+
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -56,13 +56,13 @@ C     D_pl(Nr)    :: Brownian motion related diffusivity
 C     D_A(Nr)     :: Brownian motion related diffusivity
 C     b_brown(Nr) :: Brownian motion encounter kernel rate
 C     w_r(Nr)     :: falling velocity of a particle
-C     r_A         :: algae cell radius
+C     r_A         :: plankton cell radius
 C     Vbf         :: biofilm volume on one particle
 
 C     Chla(Nr)    :: ambient Chl-a concentration
 C     Chla_by_C(Nr)  :: ambient Carbon concentration
 
-C     algae_ambient :: ambient algae cell concentration
+C     plankton_ambient :: ambient plankton cell concentration
 
 C     I_surf      :: radiation received at surface
 C                    in uE/m2-day
@@ -178,7 +178,7 @@ C     each photon has  3.61e-19 J  energy
       W_to_uE_day = 397000.
 
 ! C   % Boltzman constant           :: k_bolz
-! C   % radius of an algae cell     :: r_A
+! C   % radius of an plankton cell     :: r_A
       k_bolz = 1.3806E-23
       r_A = 3.6E-6
 
@@ -221,24 +221,14 @@ C     Only do for tracers used with biofouling
 ! C         % water density             :: rhoInSitu(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
 ! C           !!!! actual rho = rhoInSitu + rhoConst
 ! C         % water dynamic viscosity   :: use 0.001
-
-
-! C         % radiation at surface   :: I_surf in uE/m2-day
-! C         % radiation at depth r   :: Inc(Nr)
-! C         % light exdinction       :: exponential decay with depth
-! C                                  :: * exp( (0.2+0.02*Chla(k)) * rC(k))
-            Inc(k) = I_surf * exp( (0.2+0.02*Chla(k)) * rC(k))
-            IF (Inc(k) .LT. 0) THEN
-                  Inc(k) = 0.
-            ENDIF
-!
+! C
 ! C         % reaction step             :: sA == (jTr * 1. _d 0)
 ! C         % encounter kernel rate
 ! C         % diffusivity               :: D_pl(Nr)  
 ! C         % diffusivity               :: D_A(Nr)
 ! C         % velocity                  :: w_r(Nr)
 ! C         % kernel rate               :: b_brown(Nr)
-! C         % ambient algae             :: A_A(Nr) (#cell/m^3) 
+! C         % ambient plankton             :: A_A(Nr) (#cell/m^3) 
             D_pl(k) = k_bolz* (theta(i,j,k,bi,bj)+273.16) 
      &            / (6. * PI * 0.001 * PTRACERS_d_p(iTr) / 2.)
             D_A(k)  = k_bolz* (theta(i,j,k,bi,bj)+273.16) 
@@ -251,7 +241,16 @@ C     Only do for tracers used with biofouling
      &            + 0.5 * PI * (PTRACERS_d_p(iTr)/2)**2 * w_r(k)
      &            + 1.3 * (1.7E5 / 86400.) *
      &              (PTRACERS_d_p(iTr)/2. + r_A)**3
-            A_A(k) = algae_ambient(i,j,k,bi,bj)
+            A_A(k) = plankton_ambient(i,j,k,bi,bj)
+
+
+! C         % radiation at surface   :: I_surf in uE/m2-day
+! C         % radiation at depth r   :: Inc(Nr)
+! C         % light exdinction       :: exponential decay with depth
+            Inc(k) = I_surf * exp( 0.2 * rC(k))
+            IF (Inc(k) .LT. 0) THEN
+                  Inc(k) = 0.
+            ENDIF
 
             
 ! C         % mu_opt(Nr) :: optimal growth rate in (1/day)
