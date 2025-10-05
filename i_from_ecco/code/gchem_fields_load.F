@@ -57,6 +57,7 @@ C     gchemSource & gchemTendency are initialized here
                   gchemSource(i,j,k,bi,bj,jTr) = 0. _d 0
                   gchemTendency(i,j,k,bi,bj,jTr) = 0. _d 0
                   plankton_ambient(i,j,k,bi,bj) = 0. _d 0
+                  chlorophyll_ambient(i,j,k,bi,bj) = 0. _d 0
             ENDDO
            ENDDO
           ENDDO
@@ -87,6 +88,12 @@ C     read the 3D-plankton field
          CALL READ_FLD_XYZ_RL(tmpSourceFile,' ',
      &        plankton_ambient(1-OLx,1-OLy,1,1,1),0,myThid)
         ENDIF
+C     read the 3D-chlorophyll field
+        tmpSourceFile = filename3
+        IF ( tmpSourceFile .NE. ' ' ) THEN
+         CALL READ_FLD_XYZ_RL(tmpSourceFile,' ',
+     &        chlorophyll_ambient(1-OLx,1-OLy,1,1,1),0,myThid)
+        ENDIF
 
       ENDIF
 
@@ -114,6 +121,7 @@ C     Apply mask
            DO i=1-OLx,sNx+OLx
             IF (maskC(i,j,k,bi,bj) .EQ. 0.) THEN
                 plankton_ambient(i,j,k,bi,bj)=0. _d 0
+                chlorophyll_ambient(i,j,k,bi,bj)=0. _d 0
             ENDIF
            ENDDO
           ENDDO

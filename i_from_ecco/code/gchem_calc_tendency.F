@@ -82,7 +82,7 @@ C     phi(Nr)     :: temperature influence
 
       _RL tr_projA, k_bolz, r_A, Vbf
       _RL D_pl(Nr), D_A(Nr), b_brown(Nr), w_r(Nr)
-      _RL A_A(Nr)
+      _RL A_A(Nr), exp_dist
       _RL I_surf, Inc(Nr), W_to_uE_day
       _RL Topt, Tmin, Tmax
       _RL mu_opt(Nr), mu(Nr), phi(Nr)
@@ -210,6 +210,8 @@ C     Only do for tracers used with biofouling
 
             I_surf = - swflux(i,j,bi,bj) * W_to_uE_day
 
+            exp_dist = drC(1) * 
+     &         (0.04 + 0.04 * chlorophyll_ambient(i,j,1,bi,bj))
 
            DO k = 1, Nr
 ! C         % profiles
@@ -243,14 +245,19 @@ C     Only do for tracers used with biofouling
      &              (PTRACERS_d_p(iTr)/2. + r_A)**3
             A_A(k) = plankton_ambient(i,j,k,bi,bj)
 
-
 ! C         % radiation at surface   :: I_surf in uE/m2-day
 ! C         % radiation at depth r   :: Inc(Nr)
 ! C         % light exdinction       :: exponential decay with depth
-            Inc(k) = I_surf * exp( 0.2 * rC(k))
+! C         % exp_dist               :: distinction exponent
+            
+            Inc(k) = I_surf * exp( - exp_dist )
             IF (Inc(k) .LT. 0) THEN
                   Inc(k) = 0.
             ENDIF
+
+            exp_dist = exp_dist + drC(k+1) * 
+     &         (0.04 + 0.02 * chlorophyll_ambient(i,j,k,bi,bj)
+     &               + 0.02 * chlorophyll_ambient(i,j,k+1,bi,bj))
 
             
 ! C         % mu_opt(Nr) :: optimal growth rate in (1/day)

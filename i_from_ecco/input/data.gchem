@@ -10,5 +10,6 @@
 #  and scaled with 2015 GDP data from worldbank 
  Filename1 = 'source_2010_ppmps.bin',
  Filename2 = 'ambient_plankton.bin',
+ Filename3 = 'ambient_chla.bin',
  &
  

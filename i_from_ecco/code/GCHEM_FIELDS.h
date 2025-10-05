@@ -10,9 +10,6 @@ C  gchemTendency :: 3DxPTRACER_num field that store the tendencies due
 C                   to the bio-geochemical model
 C  gchemSource   :: 3DxPTRACER_num field that store the tendencies due
 C                   to a fixed input
-C  average1      :: 3D field that store the average of the shortwave
-C                   radiation at the ocean surface,
-C                   * assuming the magnitude is UNITY.
 
 
 #ifdef GCHEM_ADD2TR_TENDENCY
@@ -24,14 +21,18 @@ C                   * assuming the magnitude is UNITY.
      &                  GCHEM_tendTr_num)
       _RL gchemSource(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy,
      &                  GCHEM_tendTr_num)
-      _RL plankton_ambient(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
+      _RL plankton_ambient
+     &                  (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
+      _RL chlorophyll_ambient
+     &                  (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
 
       COMMON /GCHEM_FIELDS/
      &     gchemTendency,
      &     bio_dAdt,
      &     bio_flux,
      &     gchemSource,
-     &     plankton_ambient
+     &     plankton_ambient,
+     &     chlorophyll_ambient
 
 #endif /* GCHEM_ADD2TR_TENDENCY */
 CEOP
