@@ -255,9 +255,11 @@ C     Only do for tracers used with biofouling
                   Inc(k) = 0.
             ENDIF
 
+            IF (k .NE. Nr) THEN
             exp_dist = exp_dist + drC(k+1) * 
      &         (0.04 + 0.02 * chlorophyll_ambient(i,j,k,bi,bj)
      &               + 0.02 * chlorophyll_ambient(i,j,k+1,bi,bj))
+            ENDIF
 
             
 ! C         % mu_opt(Nr) :: optimal growth rate in (1/day)
