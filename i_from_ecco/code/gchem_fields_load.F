@@ -100,6 +100,7 @@ C     read the 3D-zooplankton-carbon field
         IF ( tmpSourceFile .NE. ' ' ) THEN
          CALL READ_FLD_XYZ_RL(tmpSourceFile,' ',
      &        c_zoo_ambient(1-OLx,1-OLy,1,1,1),0,myThid)
+        ENDIF
 
       ENDIF
 
