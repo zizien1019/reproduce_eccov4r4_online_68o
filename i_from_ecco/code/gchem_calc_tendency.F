@@ -82,9 +82,9 @@ C     phi(Nr)     :: temperature influence
 
       _RL tr_projA, k_bolz, r_A, Vbf
       _RL D_pl(Nr), D_A(Nr), b_brown(Nr), w_r(Nr)
-      _RL A_A(Nr), exp_dist, g(Nr)
+      _RL exp_dist
       _RL I_surf, Inc(Nr), W_to_uE_day
-      _RL mu_opt(Nr), mu(Nr), phi(Nr)
+      _RL mu_opt(Nr), phi(Nr)
 
       INTEGER myIter, myThid
 CEOP
@@ -242,7 +242,6 @@ C     Only do for tracers used with biofouling
      &            + 0.5 * PI * (PTRACERS_d_p(iTr)/2)**2 * w_r(k)
      &            + 1.3 * (1.7E5 / 86400.) *
      &              (PTRACERS_d_p(iTr)/2. + r_A)**3
-            A_A(k) = phyto_ambient(i,j,k,bi,bj)
 
 ! C         % radiation at surface   :: I_surf in uE/m2-day
 ! C         % radiation at depth r   :: Inc(Nr)
@@ -282,18 +281,16 @@ C     Only do for tracers used with biofouling
      &         (theta(i,j,k,bi,bj) .LT. PTRACERS_BFLG_Tmin) ) THEN
                   phi(k) = 0.
             ENDIF
-            mu(k) = mu_opt(k) * phi(k)
-            g(k) = PTRACERS_BFLG_gmax
-     &           * c_zoo_ambient / PTRACERS_BFLG_Kg
 
             bio_dAdt(i,j,k,bi,bj,jTr) = 
-     &      b_brown(k)*A_A(k) / (4.*PI*(PTRACERS_d_0(i_d0)/2.)**2)
-     &     + ( 
-     &       mu(k)/ 86400.
+     &      b_brown(k) * phyto_ambient(i,j,k,bi,bj) 
+     &                 / (4.*PI*(PTRACERS_d_0(i_d0)/2.)**2)
+     &     + ( mu_opt(k) * phi(k) / 86400.
      &     - PTRACERS_BFLG_mort
      &     - PTRACERS_BFLG_Q10 ** (theta(i,j,k,bi,bj)/10. - 2.)
      &            * PTRACERS_BFLG_R20
-     &     - g(k)
+     &     - PTRACERS_BFLG_gmax * c_zoo_ambient(i,j,k,bi,bj) 
+     &            / PTRACERS_BFLG_Kg
      &       )    * (i_A * 1. _d 0 - 1.5) * PTRACERS_delA
 
            ENDDO
