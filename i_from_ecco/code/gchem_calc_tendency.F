@@ -62,7 +62,7 @@ C     Vbf         :: biofilm volume on one particle
 C     Chla(Nr)    :: ambient Chl-a concentration
 C     Chla_by_C(Nr)  :: ambient Carbon concentration
 
-C     plankton_ambient :: ambient plankton cell concentration
+C     phyto_ambient :: ambient plankton cell concentration
 
 C     I_surf      :: radiation received at surface
 C                    in uE/m2-day
@@ -82,9 +82,8 @@ C     phi(Nr)     :: temperature influence
 
       _RL tr_projA, k_bolz, r_A, Vbf
       _RL D_pl(Nr), D_A(Nr), b_brown(Nr), w_r(Nr)
-      _RL A_A(Nr), exp_dist
+      _RL A_A(Nr), exp_dist, g(Nr)
       _RL I_surf, Inc(Nr), W_to_uE_day
-      _RL Topt, Tmin, Tmax
       _RL mu_opt(Nr), mu(Nr), phi(Nr)
 
       INTEGER myIter, myThid
@@ -211,7 +210,7 @@ C     Only do for tracers used with biofouling
             I_surf = - swflux(i,j,bi,bj) * W_to_uE_day
 
             exp_dist = drC(1) * 
-     &         (0.04 + 0.04 * chlorophyll_ambient(i,j,1,bi,bj))
+     &         (0.04 + 0.04 * chla_ambient(i,j,1,bi,bj))
 
            DO k = 1, Nr
 ! C         % profiles
@@ -243,7 +242,7 @@ C     Only do for tracers used with biofouling
      &            + 0.5 * PI * (PTRACERS_d_p(iTr)/2)**2 * w_r(k)
      &            + 1.3 * (1.7E5 / 86400.) *
      &              (PTRACERS_d_p(iTr)/2. + r_A)**3
-            A_A(k) = plankton_ambient(i,j,k,bi,bj)
+            A_A(k) = phyto_ambient(i,j,k,bi,bj)
 
 ! C         % radiation at surface   :: I_surf in uE/m2-day
 ! C         % radiation at depth r   :: Inc(Nr)
@@ -257,8 +256,8 @@ C     Only do for tracers used with biofouling
 
             IF (k .NE. Nr) THEN
             exp_dist = exp_dist + drC(k+1) * 
-     &         (0.04 + 0.02 * chlorophyll_ambient(i,j,k,bi,bj)
-     &               + 0.02 * chlorophyll_ambient(i,j,k+1,bi,bj))
+     &         (0.04 + 0.02 * chla_ambient(i,j,k,bi,bj)
+     &               + 0.02 * chla_ambient(i,j,k+1,bi,bj))
             ENDIF
 
             
@@ -266,30 +265,36 @@ C     Only do for tracers used with biofouling
 ! C         % mu(Nr)     :: growth rate in (1/day)
 ! C         % phi(Nr)    :: temperature influence
 ! C         % Irradiance needs conversion into uE/m2-sec 
-            mu_opt(k) = 1.85 * Inc(k)/86400 / 
-     &            (Inc(k)/86400 + 1.85/0.21)
-            Tmin = -3.7
-            Topt = 27.5
-            Tmax = 34.2
-            phi(k) = (theta(i,j,k,bi,bj) - Tmax) 
-     &         * (theta(i,j,k,bi,bj) - Tmin)**2 
-     &         / (Topt-Tmin) / ( 
-     &    (Topt-Tmin)*(theta(i,j,k,bi,bj) - Topt) 
-     &  - (Topt-Tmax)*(Topt+Tmin-2.*theta(i,j,k,bi,bj)) 
+            mu_opt(k) = PTRACERS_BFLG_mu_max * Inc(k)/86400 / 
+     &            (Inc(k)/86400 + 
+     &            PTRACERS_BFLG_mu_max / PTRACERS_BFLG_alpha)
+
+            phi(k) = (theta(i,j,k,bi,bj) - PTRACERS_BFLG_Tmax) 
+     &         * (theta(i,j,k,bi,bj) - PTRACERS_BFLG_Tmin)**2 
+     &         / (PTRACERS_BFLG_Topt-PTRACERS_BFLG_Tmin) / ( 
+     &    (PTRACERS_BFLG_Topt-PTRACERS_BFLG_Tmin)*
+     &            (theta(i,j,k,bi,bj) - PTRACERS_BFLG_Topt) 
+     &  - (PTRACERS_BFLG_Topt-PTRACERS_BFLG_Tmax)*
+     &            (PTRACERS_BFLG_Topt+PTRACERS_BFLG_Tmin
+     &            -2.*theta(i,j,k,bi,bj)) 
      &        )
-            IF ( (theta(i,j,k,bi,bj) .GT. Tmax) .OR.
-     &           (theta(i,j,k,bi,bj) .LT. Tmin) ) THEN
+            IF ( (theta(i,j,k,bi,bj) .GT. PTRACERS_BFLG_Tmax) .OR.
+     &         (theta(i,j,k,bi,bj) .LT. PTRACERS_BFLG_Tmin) ) THEN
                   phi(k) = 0.
             ENDIF
             mu(k) = mu_opt(k) * phi(k)
-            
+            g(k) = PTRACERS_BFLG_gmax
+     &           * c_zoo_ambient / PTRACERS_BFLG_Kg
 
             bio_dAdt(i,j,k,bi,bj,jTr) = 
      &      b_brown(k)*A_A(k) / (4.*PI*(PTRACERS_d_0(i_d0)/2.)**2)
-     &     + mu(k)/ 86400. * (i_A * 1. _d 0 - 1.5) * PTRACERS_delA
-     &     - 0.05 / 86400. * (i_A * 1. _d 0 - 1.5) * PTRACERS_delA
-     &     - 1.88**(theta(i,j,k,bi,bj)/10. - 2.)*0.06/86400.
-     &       * (i_A * 1. _d 0 - 1.5) * PTRACERS_delA
+     &     + ( 
+     &       mu(k)/ 86400.
+     &     - PTRACERS_BFLG_mort
+     &     - PTRACERS_BFLG_Q10 ** (theta(i,j,k,bi,bj)/10. - 2.)
+     &            * PTRACERS_BFLG_R20
+     &     - g(k)
+     &       )    * (i_A * 1. _d 0 - 1.5) * PTRACERS_delA
 
            ENDDO
           ENDDO

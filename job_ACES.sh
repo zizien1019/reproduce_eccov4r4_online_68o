@@ -14,19 +14,15 @@
 # and propagate errors in pipelines (safer/stricter mode).
 set -euo pipefail
 
-
-
-
-
-
-
-
 export LANG=en_US.utf8
 export LC_ALL=en_US.utf8
 
 RUNNER_HOME='/scratch/user/u.zt173227/'
 SIMULA_HOST='/scratch/user/u.zt173227/BFLG/'
 ECCOv4r5_DD='/scratch/group/p.phy250235.000/alan/Release5/'
+
+cd $RUNNER_HOME/git/reproduce_eccov4r4_online_68o/
+git pull
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -76,11 +72,6 @@ ln -s $SIMULA_HOST/input/* .
 ln -s $ECCOv4r5_DD/input_bin/* .
 
 cp -p $SIMULA_HOST/build/mitgcmuv .
-
-
-
-
-
 
 
 

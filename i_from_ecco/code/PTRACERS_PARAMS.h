@@ -18,6 +18,8 @@ C     PTRACERS_ref      :: vertical profile for passive tracers, in
 C                          analogy to tRef and sRef, hence the name
 
 C     PTRACERS_wRise :: constant rising velocity
+C     *** when specified, wRise has higher priority
+C     *** than the one calculated from Stokes formula
 C     PTRACERS_rho_p    :: tracer density
 C     PTRACERS_d_p      :: plastic particle binned sizes
 C     PTRACERS_rho_0    :: density of clean plastic particles
@@ -27,7 +29,17 @@ C     PTRACERS_n_A      :: number of bins in the dimension of Attachment
 C     PTRACERS_delA     :: discretization of algae Attachment density (#/m^2)
 C     PTRACERS_rFrag    :: fragmentation rate of plastic
 
-C     *** when specified, wRise has higher priority
+C     PTRACERS_BFLG_Tmin:: growth temperature range (degree C)
+C     PTRACERS_BFLG_Topt:: growth temperature range (degree C)
+C     PTRACERS_BFLG_Tmax:: growth temperature range (degree C)
+C     PTRACERS_BFLG_mu_max:: maximum growth rate (per day)
+C     PTRACERS_BFLG_alpha :: initial slope (day^-1 / uE m^2 s^-1)
+C     PTRACERS_BFLG_mort:: mortality rate (s^-1)
+C     PTRACERS_BFLG_Q10 :: metabolism temperature dependency (Q10)
+C     PTRACERS_BFLG_R20 :: metabolism rate at 20 degree C (s^-1)
+C     PTRACERS_BFLG_gmax:: maximum grazing rate (s^-1)
+C     PTRACERS_BFLG_Kg  :: half-saturation constant for grazing (mmolC/m^3)
+C     PTRACERS_BFLG_wg  :: Predator palatability (dimensionless, 0-1)
 
 C     PTRACERS_EvPrRn   :: tracer concentration in Rain, Evap & RunOff
 C       notes: a) used if both NonLin_FrSurf & useRealFreshWater are set.
@@ -54,6 +66,18 @@ C     PTRACERS_resetPhase   :: Phase (s) to reset ptracers
       _RL PTRACERS_delA
       _RL PTRACERS_rFrag
 
+      _RL PTRACERS_BFLG_Tmin
+      _RL PTRACERS_BFLG_Topt
+      _RL PTRACERS_BFLG_Tmax
+      _RL PTRACERS_BFLG_mu_max
+      _RL PTRACERS_BFLG_alpha
+      _RL PTRACERS_BFLG_mort
+      _RL PTRACERS_BFLG_Q10
+      _RL PTRACERS_BFLG_R20
+      _RL PTRACERS_BFLG_gmax
+      _RL PTRACERS_BFLG_Kg
+      _RL PTRACERS_BFLG_wg
+
       _RL PTRACERS_EvPrRn(PTRACERS_num)
       _RL PTRACERS_startStepFwd(PTRACERS_num)
       _RL PTRACERS_resetFreq(PTRACERS_num)
@@ -77,6 +101,18 @@ C     PTRACERS_resetPhase   :: Phase (s) to reset ptracers
      &     PTRACERS_n_A,
      &     PTRACERS_delA,
      &     PTRACERS_rFrag,
+      
+     &     PTRACERS_BFLG_Tmin,
+     &     PTRACERS_BFLG_Topt,
+     &     PTRACERS_BFLG_Tmax,
+     &     PTRACERS_BFLG_mu_max,
+     &     PTRACERS_BFLG_alpha,
+     &     PTRACERS_BFLG_mort,
+     &     PTRACERS_BFLG_Q10,
+     &     PTRACERS_BFLG_R20,
+     &     PTRACERS_BFLG_gmax,
+     &     PTRACERS_BFLG_Kg,
+     &     PTRACERS_BFLG_wg,
 
      &     PTRACERS_EvPrRn,
      &     PTRACERS_startStepFwd,

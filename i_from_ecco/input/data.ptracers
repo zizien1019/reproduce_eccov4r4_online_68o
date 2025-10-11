@@ -39,6 +39,30 @@
 # 3. gchem_tr_register.F
 #    to match PTRACERS_n_d_0 * PTRACERS_n_A
 
+# parameters related to biofouling
+# growth temperature range (degree C)
+ PTRACERS_BFLG_Tmin = -3.7,
+ PTRACERS_BFLG_Topt = 27.5,
+ PTRACERS_BFLG_Tmax = 34.2,
+# growth light dependency
+# maximum growth rate (per day)
+ PTRACERS_BFLG_mu_max = 1.85,
+# initial slope (day^-1 / uE m^2 s^-1)
+ PTRACERS_BFLG_alpha  = 0.21,
+# mortality rate (s^-1) (~0.1/day)
+ PTRACERS_BFLG_mort = 1.1574E-6,
+# metabolism temperature dependency (Q10)
+ PTRACERS_BFLG_Q10  = 1.0,
+# metabolism rate at 20 degree C (s^-1)
+ PTRACERS_BFLG_R20  = 0.,
+# maximum grazing rate (s^-1) (~0.624/day)
+ PTRACERS_BFLG_gmax = 7.2222E-6,
+# half-saturation constant for grazing (mmolC/m^3)
+ PTRACERS_BFLG_Kg   = 10.2,
+# Predator palatability (dimensionless, 0-1)
+ PTRACERS_BFLG_wg   = 0.5,
+
+
 # Default scheme & Kh now set in ptracers_readparms.F
  PTRACERS_advScheme(:)= 120*77,
  PTRACERS_diffKh(:)   = 120*1.E2,

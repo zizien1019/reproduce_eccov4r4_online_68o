@@ -21,9 +21,11 @@ C                   to a fixed input
      &                  GCHEM_tendTr_num)
       _RL gchemSource(1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy,
      &                  GCHEM_tendTr_num)
-      _RL plankton_ambient
+      _RL chla_ambient
      &                  (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
-      _RL chlorophyll_ambient
+      _RL phyto_ambient
+     &                  (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
+      _RL c_zoo_ambient
      &                  (1-OLx:sNx+OLx,1-OLy:sNy+OLy,Nr,nSx,nSy)
 
       COMMON /GCHEM_FIELDS/
@@ -31,8 +33,9 @@ C                   to a fixed input
      &     bio_dAdt,
      &     bio_flux,
      &     gchemSource,
-     &     plankton_ambient,
-     &     chlorophyll_ambient
+     &     chla_ambient,
+     &     phyto_ambient,
+     &     c_zoo_ambient
 
 #endif /* GCHEM_ADD2TR_TENDENCY */
 CEOP

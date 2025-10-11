@@ -72,6 +72,17 @@ C     tauTr1ClimRelax :: old parameter (will be removed 1 day)
      &     PTRACERS_delA,
      &     PTRACERS_rFrag,
 
+     &     PTRACERS_BFLG_Tmin,
+     &     PTRACERS_BFLG_Topt,
+     &     PTRACERS_BFLG_Tmax,
+     &     PTRACERS_BFLG_mu_max,
+     &     PTRACERS_BFLG_alpha,
+     &     PTRACERS_BFLG_mort,
+     &     PTRACERS_BFLG_Q10,
+     &     PTRACERS_BFLG_R20,
+     &     PTRACERS_BFLG_gmax,
+     &     PTRACERS_BFLG_Kg,
+     &     PTRACERS_BFLG_wg,
 
      &     PTRACERS_EvPrRn,
      &     PTRACERS_useGMRedi,
