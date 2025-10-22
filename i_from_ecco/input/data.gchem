@@ -11,6 +11,6 @@
  Filename1 = 'source_2010_ppmps.bin',
  Filename2 = 'ambient-chla-mgm-3.bin',
  Filename3 = 'ambient-phy-Numm-3.bin',
- Filename4 = 'ambient-zoop-mmolCm-3.bin',
+ Filename4 = 'ambient-zoo-mmolCm-3.bin',
  &
  
