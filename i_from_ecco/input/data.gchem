@@ -3,7 +3,7 @@
   useDIC    = .FALSE.,
   useBLING  = .FALSE.,
   useDARWIN = .FALSE.,
-  nsubtime=6,
+  nsubtime=8,
 
 # Tracer source file
 #  source along coast based on Jambeck et al 2015.
