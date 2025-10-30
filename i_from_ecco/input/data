@@ -104,9 +104,9 @@
  nIter0=2,
 #  nTimeSteps=8760,
  nTimeSteps=90000,
-# every 5 years
- pChkptFreq  = 157680000.0,
- chkptFreq   = 157680000.0,
+# every 7 years :: 8760 * 7 * 3600 = 220752000
+ pChkptFreq  = 220752000.0,
+ chkptFreq   = 220752000.0,
  taveFreq    =  31536000.0,
  monitorFreq =  31536000.0,
  dumpFreq    = 157680000.0,
