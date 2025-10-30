@@ -172,9 +172,7 @@ C     Biofouling based on (KOOI 2017)
 C     https://doi.org/10.1016/j.marpol.2017.01.001
 
 C     Define the conversion factor from W/m2 to uE/m2-day
-C     assuming average photon wavelength of 550 nm
-C     each photon has  3.61e-19 J  energy  
-      W_to_uE_day = 397000.
+      W_to_uE_day = 1.E5.
 
 ! C   % Boltzman constant           :: k_bolz
 ! C   % radius of an plankton cell     :: r_A

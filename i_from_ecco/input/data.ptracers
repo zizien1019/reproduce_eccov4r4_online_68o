@@ -48,7 +48,7 @@
 # maximum growth rate (per day)
  PTRACERS_BFLG_mu_max = 1.85,
 # initial slope (day^-1 / uE m^2 s^-1)
- PTRACERS_BFLG_alpha  = 0.21,
+ PTRACERS_BFLG_alpha  = 0.12,
 # mortality rate (s^-1) (~0.1/day)
  PTRACERS_BFLG_mort = 1.1574E-6,
 # metabolism temperature dependency (Q10)
