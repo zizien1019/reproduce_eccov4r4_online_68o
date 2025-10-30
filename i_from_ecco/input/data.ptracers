@@ -32,7 +32,7 @@
 #  PTRACERS_d_0(4)   = 30.E-6,
 #  PTRACERS_d_0(5)   = 5.E-6,
  PTRACERS_n_A = 40,
- PTRACERS_delA  = 5.E9,
+ PTRACERS_delA  = 2.E9,
 # remember to modify:
 # 1. PTRACERS_numInUse up there
 # 2. GCHEM_SIZE.h
