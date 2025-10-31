@@ -288,7 +288,7 @@ C     Only do for tracers used with biofouling
      &     - PTRACERS_BFLG_Q10 ** (theta(i,j,k,bi,bj)/10. - 2.)
      &            * PTRACERS_BFLG_R20
      &     - PTRACERS_BFLG_gmax * c_zoo_ambient(i,j,k,bi,bj) 
-     &            / PTRACERS_BFLG_Kg
+     &            * PTRACERS_BFLG_wg / PTRACERS_BFLG_Kg
      &       )    * (i_A * 1. _d 0 - 1.5) * PTRACERS_delA
 
            ENDDO
