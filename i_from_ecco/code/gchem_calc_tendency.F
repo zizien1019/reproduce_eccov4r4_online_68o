@@ -247,7 +247,7 @@ C     Only do for tracers used with biofouling
 ! C         % exp_dist               :: distinction exponent
             
             Inc(k) = I_surf * exp( - exp_dist )
-            IF (Inc(k) .LT. 0) THEN
+            IF (Inc(k) .LT. 0.) THEN
                   Inc(k) = 0.
             ENDIF
 
@@ -262,8 +262,8 @@ C     Only do for tracers used with biofouling
 ! C         % mu(Nr)     :: growth rate in (1/day)
 ! C         % phi(Nr)    :: temperature influence
 ! C         % Irradiance needs conversion into uE/m2-sec 
-            mu_opt(k) = PTRACERS_BFLG_mu_max * Inc(k)/86400 / 
-     &            (Inc(k)/86400 + 
+            mu_opt(k) = PTRACERS_BFLG_mu_max * Inc(k)/86400./ 
+     &            (Inc(k)/86400. + 
      &            PTRACERS_BFLG_mu_max / PTRACERS_BFLG_alpha)
 
             phi(k) = (theta(i,j,k,bi,bj) - PTRACERS_BFLG_Tmax) 
@@ -283,13 +283,14 @@ C     Only do for tracers used with biofouling
             bio_dAdt(i,j,k,bi,bj,jTr) = 
      &      b_brown(k) * phyto_ambient(i,j,k,bi,bj) 
      &                 / (4.*PI*(PTRACERS_d_0(i_d0)/2.)**2)
-     &     + ( mu_opt(k) * phi(k) / 86400.
+     &     + ( mu_opt(k) * phi(k)
      &     - PTRACERS_BFLG_mort
      &     - PTRACERS_BFLG_Q10 ** (theta(i,j,k,bi,bj)/10. - 2.)
      &            * PTRACERS_BFLG_R20
      &     - PTRACERS_BFLG_gmax * c_zoo_ambient(i,j,k,bi,bj) 
      &            * PTRACERS_BFLG_wg / PTRACERS_BFLG_Kg
-     &       )    * (i_A * 1. _d 0 - 1.5) * PTRACERS_delA
+     &       ) / 86400.0
+     &            * (i_A * 1. _d 0 - 1.5) * PTRACERS_delA
 
            ENDDO
           ENDDO

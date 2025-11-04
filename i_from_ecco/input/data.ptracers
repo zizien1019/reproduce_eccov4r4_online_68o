@@ -50,13 +50,13 @@
 # initial slope (day^-1 / uE m^2 s^-1)
  PTRACERS_BFLG_alpha  = 0.12,
 # mortality rate (s^-1) (~0.1/day)
- PTRACERS_BFLG_mort = 1.1574E-6,
+ PTRACERS_BFLG_mort = 0.1,
 # metabolism temperature dependency (Q10)
  PTRACERS_BFLG_Q10  = 1.0,
 # metabolism rate at 20 degree C (s^-1)
  PTRACERS_BFLG_R20  = 0.,
 # maximum grazing rate (s^-1) (~0.624/day)
- PTRACERS_BFLG_gmax = 7.2222E-6,
+ PTRACERS_BFLG_gmax = 0.624,
 # half-saturation constant for grazing (mmolC/m^3)
  PTRACERS_BFLG_Kg   = 10.2,
 # Predator palatability (dimensionless, 0-1)
