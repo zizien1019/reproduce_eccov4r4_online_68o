@@ -262,8 +262,8 @@ C     Only do for tracers used with biofouling
 ! C         % mu(Nr)     :: growth rate in (1/day)
 ! C         % phi(Nr)    :: temperature influence
 ! C         % Irradiance needs conversion into uE/m2-sec 
-            mu_opt(k) = PTRACERS_BFLG_mu_max * Inc(k)/86400./ 
-     &            (Inc(k)/86400. + 
+            mu_opt(k) = PTRACERS_BFLG_mu_max * Inc(k)/ 
+     &            (Inc(k) + 
      &            PTRACERS_BFLG_mu_max / PTRACERS_BFLG_alpha)
 
             phi(k) = (theta(i,j,k,bi,bj) - PTRACERS_BFLG_Tmax) 
