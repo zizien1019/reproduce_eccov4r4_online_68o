@@ -101,7 +101,7 @@
 
  &PARM03
 
- nIter0=2,
+ nIter0=43800,
 #  nTimeSteps=8760,
  nTimeSteps=90000,
 # every 7 years :: 8760 * 7 * 3600 = 220752000
