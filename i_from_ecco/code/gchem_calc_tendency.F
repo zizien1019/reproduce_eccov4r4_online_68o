@@ -79,6 +79,7 @@ C     phi(Nr)     :: temperature influence
       _RL weightA(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL weightB(1-OLx:sNx+OLx,1-OLy:sNy+OLy)
       _RL delTrac
+      _RL g_per_particle
 
       _RL tr_projA, k_bolz, r_A, Vbf
       _RL D_pl(Nr), D_A(Nr), b_brown(Nr), w_r(Nr)
@@ -150,6 +151,17 @@ C     i_A=2:PTRACERS_n_A      :: biofouling & reacting tracers
            DO j = 1-OLy, sNy+OLy
             DO i = 1-OLx, sNx+OLx
 C     source term from specified source file
+C     gchemSource now from source_2010_ppmps.bin
+C     is in units ppm per second = g m-3 per second
+C     but biofouled particles are in units of # m-3 per second
+C     so scale by mass per particle
+                  g_per_particle = PTRACERS_rho_p(jTr) *
+     &      (4./3.) * PI * (PTRACERS_d_p(jTr)/2.)**3 * 1.E3
+
+                  gchemSource(i,j,k,bi,bj,jTr) = 
+     &      gchemSource(i,j,k,bi,bj,jTr) / g_per_particle
+C     now the source is converted to # m-3 per second
+C     add to tendency:     
              IF (gchemSource(i,j,k,bi,bj,jTr).NE.0) THEN
             gchemTendency(i,j,k,bi,bj,jTr) = 
      &        gchemTendency(i,j,k,bi,bj,jTr)

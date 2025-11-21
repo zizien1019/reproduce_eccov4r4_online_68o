@@ -49,18 +49,34 @@
  PTRACERS_BFLG_mu_max = 1.85,
 # initial slope (day^-1 / uE m^2 s^-1)
  PTRACERS_BFLG_alpha  = 0.12,
-# mortality rate (s^-1) (~0.1/day)
- PTRACERS_BFLG_mort = 0.1,
+
+# Levy 2011 model ::
+# mortality rate (~5% per day)
+ PTRACERS_BFLG_mort = 0.05,
 # metabolism temperature dependency (Q10)
- PTRACERS_BFLG_Q10  = 1.0,
-# metabolism rate at 20 degree C (s^-1)
- PTRACERS_BFLG_R20  = 0.,
-# maximum grazing rate (s^-1) (~0.624/day)
- PTRACERS_BFLG_gmax = 0.624,
+ PTRACERS_BFLG_Q10  = 1.88,
+# metabolism rate at 20 degree C (6% per day)
+ PTRACERS_BFLG_R20  = 0.06,
+# maximum grazing rate = 0 (no grazing) for Levy model
+ PTRACERS_BFLG_gmax = 0.,
 # half-saturation constant for grazing (mmolC/m^3)
  PTRACERS_BFLG_Kg   = 10.2,
 # Predator palatability (dimensionless, 0-1)
  PTRACERS_BFLG_wg   = 0.5,
+
+# # Darwin model ::
+# # mortality rate (~0.1 per day)
+#  PTRACERS_BFLG_mort = 0.1,
+# # metabolism temperature dependency (Q10)
+#  PTRACERS_BFLG_Q10  = 1.0,
+# # metabolism rate = 0 (constant metabolism merged with mortality) for Darwin model
+#  PTRACERS_BFLG_R20  = 0.,
+# # maximum grazing rate (~0.624 per day)
+#  PTRACERS_BFLG_gmax = 0.624,
+# # half-saturation constant for grazing (mmolC/m^3)
+#  PTRACERS_BFLG_Kg   = 10.2,
+# # Predator palatability (dimensionless, 0-1)
+#  PTRACERS_BFLG_wg   = 0.5,
 
 
 # Default scheme & Kh now set in ptracers_readparms.F
